@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { createPublicClient } from '@/lib/supabase/server';
 import { WorkshopCard } from '@/components/WorkshopCard';
 import { Kompu } from '@/components/Kompu';
+import { ChatAssistant } from '@/components/ChatAssistant';
 import { Icon } from '@/components/icons';
 import type { Workshop } from '@/lib/types';
 
@@ -9,18 +10,11 @@ export const revalidate = 300; // ISR
 
 const TIER_RANK: Record<string, number> = { spotlight: 3, featured: 2, pro: 1, none: 0 };
 
-const PROBLEMS: [string, string][] = [
-  ['Mootori rikketuli põleb', 'diagnostika'],
-  ['Rehvivahetus + hoiustamine', 'rehvivahetus'],
-  ['Piduriklotsid kriuksuvad', 'piduriklotsid'],
-  ['Kliima ei jahuta', 'kliima'],
-  ['Väristab roolis', 'vedrustus'],
-  ['Õli on vaja vahetada', 'olivahetus'],
-];
-const CITIES = ['Tallinn', 'Tartu', 'Pärnu', 'Narva', 'Rakvere', 'Viljandi'];
+const CITIES = ['Tallinn', 'Tartu', 'Pärnu', 'Narva', 'Rakvere', 'Viljandi', 'Kohtla-Järve', 'Kuressaare', 'Haapsalu', 'Võru', 'Valga', 'Jõhvi', 'Paide', 'Rapla'];
 const SERVICES = [
   ['olivahetus', 'Õlivahetus'], ['rehvivahetus', 'Rehvivahetus'], ['piduriklotsid', 'Piduriklotside vahetus'],
   ['diagnostika', 'Rikkediagnostika'], ['kliima', 'Kliimaseadme hooldus'], ['vedrustus', 'Rooliotsad ja vedrustus'],
+  ['ulevaatus', 'Ülevaatuse eelkontroll'], ['mootoriremont', 'Mootoriremont'],
 ];
 
 export default async function Home() {
@@ -58,12 +52,9 @@ export default async function Home() {
 
       <section className="blk" style={{ paddingBottom: 40 }}>
         <div className="wrap">
-          <div className="sec-h"><span className="eyebrow">Otsi mure järgi</span><h2>Mis su autol viga on?</h2></div>
-          <div className="probs">
-            {PROBLEMS.map(([label, svc]) => (
-              <Link key={label} href={`/tookojad?svc=${svc}`} className="chip"><Icon.bolt /> {label}</Link>
-            ))}
-          </div>
+          <div className="sec-h center"><span className="eyebrow">Autokompassi abiline</span><h2>Mis su autol viga on?</h2>
+            <p>Ei tea, millist teenust vajad? Kirjelda muret oma sõnadega — Kompu soovitab õiget teenust ja sobivaid töökodi.</p></div>
+          <ChatAssistant />
         </div>
       </section>
 
