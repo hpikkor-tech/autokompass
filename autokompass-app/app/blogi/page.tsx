@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Icon } from '@/components/icons';
+import { BlogCover } from '@/components/BlogCover';
 import { ARTICLES } from '@/lib/blog';
 
 export const metadata: Metadata = {
@@ -28,7 +29,7 @@ export default function BlogIndex() {
       <section className="blk" style={{ paddingTop: 40 }}>
         <div className="wrap">
           <Link href={`/blogi/${lead.slug}`} className="bloglead">
-            <div className="blcover">{lead.cover}</div>
+            <div className="blcover"><BlogCover art={lead.cover} /></div>
             <div className="blbody">
               <div className="blmeta"><span className="tagcat">{lead.category}</span><span>{fmt(lead.date)}</span><span>· {lead.readMins} min lugemist</span></div>
               <h2>{lead.title}</h2>
@@ -40,7 +41,7 @@ export default function BlogIndex() {
           <div className="bloggrid">
             {rest.map((a) => (
               <Link key={a.slug} href={`/blogi/${a.slug}`} className="blogcard">
-                <div className="blcover sm">{a.cover}</div>
+                <div className="blcover sm"><BlogCover art={a.cover} /></div>
                 <div className="blcbody">
                   <div className="blmeta"><span className="tagcat">{a.category}</span><span>{a.readMins} min</span></div>
                   <h3>{a.title}</h3>
