@@ -1,0 +1,32 @@
+{
+  "name": "autokompass",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "ingest:ariregister": "tsx scripts/ingest-ariregister.ts",
+    "enrich:places": "tsx scripts/enrich-places.ts",
+    "seed:demo": "tsx scripts/seed-demo.ts"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.45.4",
+    "agentmail": "^0.0.30",
+    "next": "^14.2.35",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "resend": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.5",
+    "@types/node": "^22.7.4",
+    "@types/react": "^18.3.11",
+    "adm-zip": "^0.5.16",
+    "csv-parse": "^5.5.6",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
+  }
+}
