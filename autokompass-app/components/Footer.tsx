@@ -18,20 +18,20 @@ export function Footer() {
 
         <div>
           <h4>Teenused</h4>
-          <Link href="/tookojad?svc=rehvivahetus">Rehvivahetus</Link>
-          <Link href="/tookojad?svc=olivahetus">Õlivahetus</Link>
-          <Link href="/tookojad?svc=piduriklotsid">Piduriklotside vahetus</Link>
-          <Link href="/tookojad?svc=diagnostika">Rikkediagnostika</Link>
-          <Link href="/tookojad?svc=ulevaatus">Ülevaatuse eelkontroll</Link>
+          <Link href="/rehvivahetus">Rehvivahetus</Link>
+          <Link href="/autoremont">Autoremont</Link>
+          <Link href="/olivahetus">Õlivahetus</Link>
+          <Link href="/autoklaasi-vahetus">Autoklaasi vahetus</Link>
+          <Link href="/autodiagnostika">Rikkediagnostika</Link>
         </div>
 
         <div>
           <h4>Linnad</h4>
-          <Link href="/tookojad?city=Tallinn">Autoremont Tallinn</Link>
-          <Link href="/tookojad?city=Tartu">Autoremont Tartu</Link>
-          <Link href="/tookojad?city=Pärnu">Autoremont Pärnu</Link>
-          <Link href="/tookojad?city=Narva">Autoremont Narva</Link>
-          <Link href="/tookojad?city=Rakvere">Autoremont Rakvere</Link>
+          <Link href="/rehvivahetus/tallinn">Rehvivahetus Tallinnas</Link>
+          <Link href="/rehvivahetus/tartu">Rehvivahetus Tartus</Link>
+          <Link href="/autoremont/tallinn">Autoremont Tallinnas</Link>
+          <Link href="/autoremont/tartu">Autoremont Tartus</Link>
+          <Link href="/autoremont/rakvere">Autoremont Rakveres</Link>
         </div>
 
         <div>
