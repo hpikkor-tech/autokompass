@@ -335,6 +335,8 @@ footer.ft{background:var(--ink);color:#B7C4D6;padding:60px 40px 30px;margin-top:
 .stag{background:#F1F5FA;color:var(--muted);font-weight:600;font-size:12.5px;padding:4px 10px;border-radius:7px}
 .stag.link{color:var(--blue);display:inline-flex;align-items:center;gap:4px}
 .stag.link svg{width:12px;height:12px}
+.stag.brand{background:var(--green-t);color:var(--green);display:inline-flex;align-items:center;gap:4px;font-weight:700}
+.stag.brand svg{width:12px;height:12px}
 .rhrs{display:flex;align-items:center;gap:6px;color:var(--muted-2);font-size:13px;font-weight:600;margin-top:9px}
 .rhrs svg{width:14px;height:14px}
 .rright{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:14px;border-left:1px solid var(--line-2);padding-left:18px;min-width:0}
