@@ -39,7 +39,7 @@ export default async function Home() {
     const supabase = createPublicClient();
     const res = await supabase
       .from('workshops')
-      .select('*, services:workshop_services(*, category:service_categories(*))')
+      .select('*, svc_rows:workshop_services(*, category:service_categories(*))')
       .eq('is_hidden', false)
       .limit(24);
     data = res.data as Workshop[] | null;
