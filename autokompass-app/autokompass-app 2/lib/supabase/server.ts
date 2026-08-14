@@ -1,0 +1,40 @@
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import { createClient as createJsClient } from '@supabase/supabase-js';
+
+// Serveripoolne klient (kasutaja sessioon küpsistest) — RLS kehtib kasutaja rollile.
+export function createClient() {
+  const cookieStore = cookies();
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() { return cookieStore.getAll(); },
+        setAll(list: { name: string; value: string; options?: Record<string, unknown> }[]) {
+          try { list.forEach((c) => cookieStore.set(c.name, c.value, c.options as any)); }
+          catch { /* server component — küpsiseid ei saa siin seada */ }
+        },
+      },
+    }
+  );
+}
+
+// Avalik lugemisklient ilma küpsisteta — hoiab public-lehed ISR/staatilisena (SEO).
+// Kasuta avalehel, listingus, profiilil (kus kasutaja sessiooni pole vaja).
+export function createPublicClient() {
+  return createJsClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { auth: { persistSession: false } }
+  );
+}
+
+// Service-role klient (möödub RLS-ist). AINULT serveris / skriptides — mitte kunagi brauserisse.
+export function createAdminClient() {
+  return createJsClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { persistSession: false } }
+  );
+}
