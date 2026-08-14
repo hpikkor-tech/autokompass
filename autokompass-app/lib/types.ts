@@ -1,4 +1,4 @@
-// Andmetüübid (peegeldavad supabase/migrations/0001_init.sql skeemi)
+// Andmetuubid (peegeldavad supabase/migrations/0001_init.sql skeemi)
 
 export type FeaturedTier = 'none' | 'pro' | 'featured' | 'spotlight';
 
@@ -25,13 +25,14 @@ export interface Workshop {
   featured_until: string | null;
   data_origin: string;
   opening_hours: string | null;
+  services: string[];
+  brand: string | null;
   is_hidden: boolean;
   rating_avg: number;
   rating_count: number;
   created_at: string;
   updated_at: string;
-  // liidetud päringutega:
-  services?: WorkshopService[];
+  svc_rows?: WorkshopService[];
   dist_km?: number;
 }
 
