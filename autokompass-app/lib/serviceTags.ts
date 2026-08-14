@@ -1,9 +1,11 @@
-// Kuna päris töökodadel (avaandmetest) pole veel kategoriseeritud teenuseid,
-// tuletame sildid nimest. Kui töökoda lunastab profiili, saab ta täpsed lisada.
+import type { Workshop } from './types';
+
+// Osal töökodadel on päris teenused (OSM service:vehicle:* -> w.services).
+// Ülejäänutel tuletame sildid nimest, kuni nad oma profiili lunastavad.
 
 export type SvcCat = { slug: string; label: string; kw: RegExp };
 
-// Spetsialiseeritud kategooriad, mida saab nime järgi ära tunda.
+// Filtririba põhikategooriad (nime-tuletuse jaoks).
 export const SVC_CATS: SvcCat[] = [
   { slug: 'rehvivahetus', label: 'Rehvivahetus', kw: /rehv|kummi|tyre|tire|vianor|rattad|rehvi/i },
   { slug: 'autoklaas', label: 'Autoklaas', kw: /klaas|glass|carglass|autoklaas/i },
@@ -11,7 +13,19 @@ export const SVC_CATS: SvcCat[] = [
   { slug: 'ulevaatus', label: 'Ülevaatus ja diagnostika', kw: /[üu]levaat|tehno|diagnos/i },
 ];
 
-// Üldteenused (iga töökoda teeb) — ei filtreeri nime järgi, ainult konteksti pealkiri.
+const SVC_SERVICE_MAP: Record<string, string[]> = {
+  rehvivahetus: ['Rehvivahetus', 'Rehviparandus', 'Sillastend', 'Veokirehvid'],
+  autoklaas: ['Autoklaas', 'Tuuleklaas'],
+  keretood: ['Keretood', 'Autovarvimine', 'Detailing'],
+  ulevaatus: ['Ulevaatus', 'Diagnostika'],
+  olivahetus: ['Olivahetus', 'Hooldus'],
+  piduriklotsid: ['Piduriremont'],
+  diagnostika: ['Diagnostika'],
+  kliima: ['Kliimahooldus'],
+  vedrustus: ['Vedrustus', 'Sillastend'],
+  mootoriremont: ['Mootoriremont', 'Diiselremont', 'Kaigukast'],
+};
+
 export const GENERAL_SVC: Record<string, string> = {
   autoremont: 'Autoremont',
   olivahetus: 'Õlivahetus',
@@ -22,17 +36,25 @@ export const GENERAL_SVC: Record<string, string> = {
   mootoriremont: 'Mootoriremont',
 };
 
-export function tagsFor(name: string): string[] {
+function tagsFromName(name: string): string[] {
   const t = SVC_CATS.filter((c) => c.kw.test(name)).map((c) => c.label);
   return t.length ? t.slice(0, 3) : ['Autoremont ja hooldus'];
 }
 
-// Kas töökoda vastab teenusefiltrile? Spetsialiseeritud → nime järgi; üld → alati.
-export function matchesSvc(name: string, svc: string): boolean {
+export function displayServices(w: Workshop): string[] {
+  if (w.services && w.services.length) return w.services.slice(0, 5);
+  return tagsFromName(w.name);
+}
+
+export function matchesSvcW(w: Workshop, svc: string): boolean {
   if (!svc) return true;
+  const labels = SVC_SERVICE_MAP[svc];
+  if (w.services && w.services.length) {
+    return labels ? labels.some((l) => w.services.includes(l)) : true;
+  }
   const cat = SVC_CATS.find((c) => c.slug === svc);
-  if (cat) return cat.kw.test(name);
-  return true; // üldteenus: iga töökoda sobib
+  if (cat) return cat.kw.test(w.name);
+  return true;
 }
 
 export function svcLabel(svc: string): string | null {
