@@ -8,7 +8,7 @@ export function Footer() {
         <div className="ftbrand">
           <Link href="/" className="brand"><Mark /><span className="wm" style={{ color: '#fff' }}>Autokompass<i style={{ color: '#7C8DA3' }}>.ee</i></span></Link>
           <p className="ftabout">
-            Eesti autotöökodade võrdlusportaal. Kirjelda oma muret, võrdle hindu ja arvustusi ning leia usaldusväärne meister — säästa aega ja raha.
+            Eesti kõige põhjalikum autotöökodade kataloog — üle 1 200 töökoja ühes kohas. Võrdle hindu, teenuseid ja arvustusi ning leia usaldusväärne meister sekunditega. Ausalt, ilma müügijututa.
           </p>
           <div className="fttrust">
             <span className="pill" style={{ background: 'rgba(255,255,255,.06)', color: '#B7C4D6' }}><Icon.shield /> Ehtsad arvustused</span>
@@ -55,11 +55,11 @@ export function Footer() {
       </div>
 
       <div className="ftbot">
-        <span>© 2026 HPH INVEST OÜ · Autokompass.ee · Andmed pärinevad avalikest allikatest, sh Eesti äriregister. Fotod on illustratiivsed.</span>
+        <span>© 2026 HPH INVEST OÜ · Autokompass.ee · Eesti kõige põhjalikum autotöökodade kataloog</span>
         <span className="ftlinks">
           <Link href="/privaatsus">Privaatsus</Link>
           <Link href="/tingimused">Tingimused</Link>
-          <Link href="/eemalda">Eemalda minu profiil</Link>
+          <Link href="/hinnakiri">Hinnakiri</Link>
         </span>
       </div>
     </footer>
