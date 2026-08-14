@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { createPublicClient } from '@/lib/supabase/server';
 import { WorkshopCard } from '@/components/WorkshopCard';
+import { BlogCover } from '@/components/BlogCover';
 import { Kompu } from '@/components/Kompu';
 import { ChatAssistant } from '@/components/ChatAssistant';
 import { Icon } from '@/components/icons';
@@ -73,7 +74,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="blk" style={{ paddingTop: 0, marginTop: -34, paddingBottom: 40 }}>
+      <section className="statwrap">
         <div className="wrap">
           <div className="statstrip">
             <div className="st"><div className="stn">1 200+</div><div className="stl">töökoda kaardil</div></div>
@@ -171,7 +172,7 @@ export default async function Home() {
           <div className="bloggrid">
             {posts.map((a) => (
               <Link key={a.slug} href={`/blogi/${a.slug}`} className="blogcard">
-                <div className="blcover sm">{a.cover}</div>
+                <div className="blcover sm"><BlogCover art={a.cover} /></div>
                 <div className="blcbody">
                   <div className="blmeta"><span className="tagcat">{a.category}</span><span>{a.readMins} min</span></div>
                   <h3>{a.title}</h3>
