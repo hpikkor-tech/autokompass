@@ -16,7 +16,7 @@ async function getWorkshop(slug: string) {
     const supabase = createPublicClient();
     const { data } = await supabase
       .from('workshops')
-      .select('*, services:workshop_services(*, category:service_categories(*))')
+      .select('*, svc_rows:workshop_services(*, category:service_categories(*))')
       .eq('slug', slug).eq('is_hidden', false).single();
     return data as Workshop | null;
   } catch { return null; }
@@ -79,10 +79,13 @@ export default async function Profile({ params }: { params: { slug: string } }) 
 
             <div className="pcard"><h3>Teenused ja hinnad</h3>
               <table className="svctable"><tbody>
-                {(w.services ?? []).map((s) => (
+                {(w.svc_rows ?? []).map((s) => (
                   <tr key={s.id}><td>{s.category?.name_et}</td><td className="p">{priceText(s.price_from, s.price_to)}</td></tr>
                 ))}
-                {!w.services?.length && <tr><td style={{ color: 'var(--muted)' }}>Hinnakiri lisatakse peagi.</td><td /></tr>}
+                {!w.svc_rows?.length && w.services?.length ? (
+                  w.services.map((s) => <tr key={s}><td>{s}</td><td className="p" style={{ color: 'var(--muted-2)' }}>Küsi pakkumist</td></tr>)
+                ) : null}
+                {!w.svc_rows?.length && !w.services?.length && <tr><td style={{ color: 'var(--muted)' }}>Hinnakiri lisatakse peagi.</td><td /></tr>}
               </tbody></table>
               <p style={{ color: 'var(--muted-2)', fontSize: 13, marginTop: 14 }}>Hinnad on orienteeruvad. Täpne pakkumine pärast päringut.</p>
             </div>
