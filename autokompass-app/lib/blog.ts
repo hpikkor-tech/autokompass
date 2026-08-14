@@ -10,7 +10,7 @@ export type Article = {
   keyword: string;      // peamine siht-märksõna
   date: string;         // ISO
   readMins: number;
-  cover: string;        // emoji/lihtne visuaal (ei sõltu failidest)
+  cover: string;        // BlogCover kunsti-voti: tire|choose|oil|warning|check|brake
   body: string;         // usaldusväärne, meie kirjutatud HTML
 };
 
@@ -24,7 +24,7 @@ export const ARTICLES: Article[] = [
     keyword: 'rehvivahetus',
     date: '2026-08-10',
     readMins: 5,
-    cover: '🛞',
+    cover: 'tire',
     body: `
 <p>Rehvivahetus on aasta suurim autohoolduse hetk — otsingumaht kahekordistub kevadel ja sügisel. Kui tahad vältida pikka järjekorda ja kõrgemat hinda, tasub broneerida enne tippu, mitte selle keskel.</p>
 
@@ -50,7 +50,7 @@ export const ARTICLES: Article[] = [
     keyword: 'autoremont',
     date: '2026-08-08',
     readMins: 6,
-    cover: '🔧',
+    cover: 'choose',
     body: `
 <p>Auto remont on usaldusküsimus: enamik meist ei tea, mis kapoti all päriselt toimub. Hea töökoda ei tähenda kõige odavamat, vaid seda, kus hind on selge ette ja töö tehakse üks kord õigesti.</p>
 
@@ -85,7 +85,7 @@ export const ARTICLES: Article[] = [
     keyword: 'õlivahetus',
     date: '2026-08-05',
     readMins: 4,
-    cover: '🛢️',
+    cover: 'oil',
     body: `
 <p>Õlivahetus on odavaim viis mootorit pikalt töökorras hoida. Vahele jäetud vahetused on aga üks levinumaid põhjusi, miks mootor enneaegselt sureb.</p>
 
@@ -111,7 +111,7 @@ export const ARTICLES: Article[] = [
     keyword: 'autodiagnostika',
     date: '2026-08-02',
     readMins: 4,
-    cover: '⚠️',
+    cover: 'warning',
     body: `
 <p>Armatuurlaua rikketuli tekitab paanikat, aga enamasti pole tegu kohese katastroofiga. Oluline on tuvastada, kui kiireloomuline see on.</p>
 
@@ -137,7 +137,7 @@ export const ARTICLES: Article[] = [
     keyword: 'autoülevaatus',
     date: '2026-07-30',
     readMins: 4,
-    cover: '✅',
+    cover: 'check',
     body: `
 <p>Suur osa ülevaatusel läbikukkumistest pole seotud mootoriga, vaid lihtsate asjadega, mille saab enne ise üle vaadata. Korduskontroll maksab aega ja raha — enamasti tarbetult.</p>
 
@@ -167,7 +167,7 @@ export const ARTICLES: Article[] = [
     keyword: 'piduriklotside vahetus',
     date: '2026-07-26',
     readMins: 4,
-    cover: '🛑',
+    cover: 'brake',
     body: `
 <p>Pidurid on auto kõige olulisem ohutussüsteem. Piduriklotside vahetus on suhteliselt odav töö, aga edasilükkamine võib kahjustada kettaid ja teha remondi mitu korda kallimaks.</p>
 
