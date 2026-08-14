@@ -8,7 +8,7 @@ const PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent(
 
 export function WorkshopCard({ w }: { w: Workshop }) {
   const img = w.logo_url || w.photos?.[0] || PLACEHOLDER;
-  const priceFrom = w.services?.reduce<number | null>((min, s) =>
+  const priceFrom = w.svc_rows?.reduce<number | null>((min, s) =>
     s.price_from != null && (min == null || s.price_from < min) ? s.price_from : min, null);
   return (
     <Link href={`/tookoda/${w.slug}`} className="wscard">
@@ -22,7 +22,7 @@ export function WorkshopCard({ w }: { w: Workshop }) {
           <span className="rate"><Stars /> {w.rating_avg > 0 ? w.rating_avg.toFixed(1).replace('.', ',') : '—'} <span style={{ color: 'var(--muted-2)' }}>({w.rating_count})</span></span>
         </div>
         <div className="meta"><Icon.pin /> {w.city}{w.dist_km != null ? ` · ${w.dist_km.toFixed(1)} km` : ''}</div>
-        <div className="svc">{w.services?.map((s) => s.category?.name_et).filter(Boolean).slice(0, 3).join(' · ') || 'Autoremont ja hooldus'}</div>
+        <div className="svc">{(w.services?.length ? w.services : w.svc_rows?.map((s) => s.category?.name_et).filter(Boolean) as string[])?.slice(0, 3).join(' · ') || 'Autoremont ja hooldus'}</div>
         <div className="foot">
           <div className="price"><small>Alates</small><b>{priceFrom != null ? `${priceFrom} €` : '—'}</b></div>
           <span className="btn btn-o btn-sm">Vaata <Icon.arwr /></span>
