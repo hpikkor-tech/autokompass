@@ -4,7 +4,7 @@ import { createPublicClient } from '@/lib/supabase/server';
 import { Icon, Stars } from '@/components/icons';
 import { OpenStatus } from '@/components/OpenStatus';
 import { ListingMap } from '@/components/ListingMap';
-import { SVC_CATS, tagsFor, matchesSvc, svcLabel } from '@/lib/serviceTags';
+import { SVC_CATS, displayServices, matchesSvcW, svcLabel } from '@/lib/serviceTags';
 import { compactHours } from '@/lib/hours';
 import type { Workshop } from '@/lib/types';
 
@@ -24,7 +24,7 @@ export function generateMetadata({ searchParams }: { searchParams: SP }): Metada
 
 function applyFilters(list: Workshop[], f: { svc?: string; city?: string; ver?: string; web?: string }) {
   return list.filter((w) =>
-    (!f.svc || matchesSvc(w.name, f.svc)) &&
+    (!f.svc || matchesSvcW(w, f.svc)) &&
     (!f.city || w.city === f.city) &&
     (!f.ver || w.claimed) &&
     (!f.web || !!w.website)
@@ -64,7 +64,7 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
   const forSvc = applyFilters(all, { city, ver, web });
   const forCity = applyFilters(all, { svc, ver, web });
   const forMisc = applyFilters(all, { svc, city });
-  const svcCounts = SVC_CATS.map((c) => ({ ...c, n: forSvc.filter((w) => c.kw.test(w.name)).length }));
+  const svcCounts = SVC_CATS.map((c) => ({ ...c, n: forSvc.filter((w) => matchesSvcW(w, c.slug)).length }));
   const cityCounts = Object.entries(forCity.reduce<Record<string, number>>((m, w) => { if (w.city) m[w.city] = (m[w.city] || 0) + 1; return m; }, {}))
     .sort((a, b) => b[1] - a[1]).slice(0, 14);
   const verCount = applyFilters(all, { svc, city, web }).filter((w) => w.claimed).length;
@@ -161,7 +161,7 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
             <div className="rows">
               {pageItems.map((w) => {
                 const feat = w.featured_tier !== 'none';
-                const tags = tagsFor(w.name);
+                const services = displayServices(w);
                 const hrs = compactHours(w.opening_hours);
                 return (
                   <div key={w.id} className={'rowcard' + (feat ? ' feat' : '')}>
@@ -175,7 +175,11 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
                         {w.claimed && <span className="badge-v"><Icon.check /> Kontrollitud</span>}
                       </Link>
                       <div className="rmeta"><Icon.pin /> {w.address || w.city || 'Eesti'}{w.opening_hours && <><span className="dot">·</span><OpenStatus hours={w.opening_hours} /></>}</div>
-                      <div className="rtags">{tags.map((t) => <span key={t} className="stag">{t}</span>)}{w.website && <a href={w.website} target="_blank" rel="noreferrer" className="stag link"><Icon.arwr /> Veeb</a>}</div>
+                      <div className="rtags">
+                        {w.brand && <span className="stag brand"><Icon.check /> {w.brand.replace(/;/g, ' · ')}</span>}
+                        {services.map((t) => <span key={t} className="stag">{t}</span>)}
+                        {w.website && <a href={w.website} target="_blank" rel="noreferrer" className="stag link"><Icon.arwr /> Veeb</a>}
+                      </div>
                       {hrs && <div className="rhrs"><Icon.clock /> {hrs}</div>}
                     </div>
                     <div className="rright">
