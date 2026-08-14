@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { Icon } from '@/components/icons';
+import { BlogCover } from '@/components/BlogCover';
 import { ARTICLES, getArticle, relatedArticles } from '@/lib/blog';
 
 export const revalidate = 3600;
@@ -36,7 +37,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
           <div className="artmeta"><span className="tagcat">{a.category}</span><span>{fmt(a.date)}</span><span>· {a.readMins} min lugemist</span></div>
           <h1>{a.title}</h1>
           <p className="artlead">{a.excerpt}</p>
-          <div className="artcover">{a.cover}</div>
+          <div className="artcover"><BlogCover art={a.cover} /></div>
           <div className="artbody" dangerouslySetInnerHTML={{ __html: a.body }} />
 
           <div className="artcta">
@@ -55,7 +56,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
           <div className="bloggrid">
             {related.map((r) => (
               <Link key={r.slug} href={`/blogi/${r.slug}`} className="blogcard">
-                <div className="blcover sm">{r.cover}</div>
+                <div className="blcover sm"><BlogCover art={r.cover} /></div>
                 <div className="blcbody">
                   <div className="blmeta"><span className="tagcat">{r.category}</span><span>{r.readMins} min</span></div>
                   <h3>{r.title}</h3>
