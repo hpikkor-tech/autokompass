@@ -206,11 +206,13 @@ footer.ft{background:var(--ink);color:#B7C4D6;padding:60px 40px 30px;margin-top:
 .ftbot .ftlinks a:hover{color:#fff}
 
 /* trust / stats strip */
-.statstrip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-top:34px}
-@media(max-width:700px){.statstrip{grid-template-columns:1fr 1fr}}
-.statstrip .st{background:#fff;padding:22px 20px;text-align:center}
-.statstrip .stn{font-family:'Lexend';font-weight:800;font-size:30px;color:var(--ink);line-height:1}
+.statwrap{position:relative;z-index:3;margin-top:-48px;padding-bottom:44px}
+.statstrip{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-lg)}
+.statstrip .st{background:#fff;padding:26px 20px;text-align:center;border-right:1px solid var(--line)}
+.statstrip .st:last-child{border-right:none}
+.statstrip .stn{font-family:'Lexend';font-weight:800;font-size:32px;color:var(--blue);line-height:1}
 .statstrip .stl{color:var(--muted);font-size:13.5px;font-weight:600;margin-top:8px}
+@media(max-width:700px){.statwrap{margin-top:-40px}.statstrip{grid-template-columns:1fr 1fr}.statstrip .st:nth-child(2n){border-right:none}.statstrip .st:nth-child(1),.statstrip .st:nth-child(2){border-bottom:1px solid var(--line)}}
 
 /* service tiles (homepage) */
 .svctiles{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
@@ -269,6 +271,40 @@ footer.ft{background:var(--ink);color:#B7C4D6;padding:60px 40px 30px;margin-top:
 .artwrap h1{font-size:clamp(28px,3.4vw,40px);font-weight:800;line-height:1.12}
 .artlead{color:var(--muted);font-size:19px;line-height:1.55;margin-top:16px}
 .artcover{background:linear-gradient(150deg,var(--blue-t),#dfeaf5);border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;font-size:96px;height:260px;margin:24px 0 30px}
+/* BlogCover (SVG kaaned) täidavad oma konteineri */
+.blcover,.artcover{position:relative;overflow:hidden;padding:0}
+.blcover .bcover,.artcover .bcover{position:absolute;inset:0;line-height:0}
+.blcover .bcsvg,.artcover .bcsvg{width:100%;height:100%;display:block}
+/* Õiguslikud lehed (privaatsus, tingimused) */
+.legal{max-width:760px}
+.legal-upd{color:var(--muted-2);font-size:14px;font-weight:600;margin-bottom:8px}
+.legal h2{font-family:'Lexend';font-size:21px;font-weight:700;color:var(--ink);margin:30px 0 10px}
+.legal h3{font-family:'Lexend';font-size:17px;font-weight:700;color:var(--ink);margin:0 0 8px;display:flex;align-items:center;gap:8px}
+.legal h3 svg{width:19px;height:19px;color:var(--blue)}
+.legal p{color:var(--ink-soft);font-size:16px;line-height:1.7;margin-bottom:12px}
+.legal ul{margin:0 0 14px;padding-left:4px;list-style:none}
+.legal ul li{color:var(--ink-soft);font-size:16px;line-height:1.6;padding-left:22px;position:relative;margin-bottom:7px}
+.legal ul li:before{content:"";position:absolute;left:4px;top:9px;width:7px;height:7px;border-radius:50%;background:var(--blue)}
+.legal a{color:var(--blue);font-weight:600}
+.legal-box{background:var(--blue-t);border:1px solid #cfe0f0;border-radius:var(--r-lg);padding:20px 22px;margin:18px 0 8px}
+.legal-box p{margin:0}
+/* Hinnakiri */
+.pricegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+@media(max-width:900px){.pricegrid{grid-template-columns:1fr}}
+.pricecard{position:relative;background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:28px 24px;display:flex;flex-direction:column;box-shadow:var(--shadow-sm)}
+.pricecard.hot{border-color:var(--blue);box-shadow:var(--shadow-lg);transform:translateY(-4px)}
+@media(max-width:900px){.pricecard.hot{transform:none}}
+.pricebadge{position:absolute;top:-12px;left:24px;background:var(--blue);color:#fff;font-size:12px;font-weight:700;letter-spacing:.04em;padding:5px 12px;border-radius:999px}
+.pricecard h3{font-family:'Lexend';font-size:19px;font-weight:700;margin-bottom:10px}
+.priceval{margin-bottom:6px}
+.priceval b{font-family:'Lexend';font-size:30px;font-weight:800;color:var(--ink)}
+.priceval span{color:var(--muted-2);font-weight:600;font-size:14px}
+.pricetag{color:var(--muted);font-size:14.5px;line-height:1.5;margin-bottom:16px;min-height:44px}
+.pricefeat{list-style:none;padding:0;margin:0 0 22px;flex:1}
+.pricefeat li{display:flex;align-items:flex-start;gap:9px;color:var(--ink-soft);font-size:14.5px;line-height:1.5;margin-bottom:10px}
+.pricefeat li svg{width:17px;height:17px;color:var(--green);flex:0 0 17px;margin-top:2px}
+.pricenote{text-align:center;color:var(--muted-2);font-size:14px;margin-top:26px}
+.pricenote a{color:var(--blue);font-weight:600}
 .artbody{font-size:17px;line-height:1.75;color:var(--ink-soft)}
 .artbody h2{font-family:'Lexend';font-size:23px;margin:30px 0 12px;color:var(--ink)}
 .artbody p{margin-bottom:16px}
