@@ -305,6 +305,31 @@ footer.ft{background:var(--ink);color:#B7C4D6;padding:60px 40px 30px;margin-top:
 .pricefeat li svg{width:17px;height:17px;color:var(--green);flex:0 0 17px;margin-top:2px}
 .pricenote{text-align:center;color:var(--muted-2);font-size:14px;margin-top:26px}
 .pricenote a{color:var(--blue);font-weight:600}
+/* SEO-maandumislehed (/teenus, /teenus/linn) */
+.landgrid{display:grid;grid-template-columns:1fr 320px;gap:34px;padding:34px 0 60px;align-items:start}
+@media(max-width:940px){.landgrid{grid-template-columns:1fr;gap:24px}}
+.landing p{color:var(--ink-soft);font-size:16.5px;line-height:1.75;margin-bottom:14px}
+.lsec{margin-top:34px}
+.lsec>h2{font-family:'Lexend';font-size:22px;font-weight:700;color:var(--ink);margin-bottom:16px}
+.lsec .sec-head-row{margin-bottom:16px}
+.lsec .rows{display:flex;flex-direction:column;gap:14px}
+.faq{display:flex;flex-direction:column;gap:10px}
+.faqi{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:2px 18px}
+.faqi summary{cursor:pointer;font-weight:700;color:var(--ink);padding:16px 0;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:15.5px}
+.faqi summary::-webkit-details-marker{display:none}
+.faqi summary:after{content:"+";font-size:22px;color:var(--blue);font-weight:400;line-height:1}
+.faqi[open] summary:after{content:"–"}
+.faqi p{color:var(--ink-soft);font-size:15.5px;line-height:1.7;padding:0 0 16px;margin:0}
+.landaside{position:sticky;top:88px;display:flex;flex-direction:column;gap:18px}
+@media(max-width:940px){.landaside{position:static}}
+.landcta{background:linear-gradient(160deg,var(--blue-d),var(--ink));border:none}
+.landcta h3{font-family:'Lexend';font-size:19px;color:#fff;margin-bottom:8px}
+.landcta p{color:#CBD7E6;font-size:14.5px;line-height:1.6;margin-bottom:16px}
+.relserv{display:flex;flex-direction:column;gap:2px}
+.rellink{display:flex;align-items:center;gap:9px;color:var(--ink-soft);font-weight:600;font-size:14.5px;padding:9px 0;border-bottom:1px solid var(--line)}
+.rellink:last-child{border-bottom:none}
+.rellink svg{width:15px;height:15px;color:var(--blue)}
+.rellink:hover{color:var(--blue)}
 .artbody{font-size:17px;line-height:1.75;color:var(--ink-soft)}
 .artbody h2{font-family:'Lexend';font-size:23px;margin:30px 0 12px;color:var(--ink)}
 .artbody p{margin-bottom:16px}
