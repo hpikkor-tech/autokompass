@@ -42,7 +42,7 @@ export default async function Profile({ params }: { params: { slug: string } }) 
       .order('created_at', { ascending: false }).limit(10);
     revs = (reviews as Review[] | null) ?? [];
   } catch { /* ignore */ }
-  const photos = w.photos?.length ? w.photos : ['/demo/1.jpg', '/demo/2.jpg', '/demo/3.jpg', '/demo/2.jpg', '/demo/1.jpg'];
+  const hasPhotos = !!(w.photos && w.photos.length);
 
   return (
     <main>
@@ -56,9 +56,20 @@ export default async function Profile({ params }: { params: { slug: string } }) 
           </div>
         </div>
 
-        <div className="gallery">
-          {photos.slice(0, 5).map((src, i) => <div className="g" key={i}><img src={src} alt={w.name} /></div>)}
-        </div>
+        {hasPhotos ? (
+          <div className="gallery">
+            {w.photos.slice(0, 5).map((src, i) => <div className="g" key={i}><img src={src} alt={w.name} /></div>)}
+          </div>
+        ) : (
+          <div className="galcard" style={{ background: `linear-gradient(135deg, ${coverColor(w.name)}, #0f1b2d)` }}>
+            <div className="gcmono">{initials(w.name)}</div>
+            <div className="gcbody">
+              <div className="gcname">{w.name}</div>
+              {w.services?.length ? <div className="gctags">{w.services.slice(0, 4).map((s) => <span key={s}>{s}</span>)}</div> : null}
+              <div className="gcnote"><Icon.pin /> {w.address || w.city || 'Eesti'} · Fotod lisab töökoda profiili lunastades</div>
+            </div>
+          </div>
+        )}
 
         {!w.claimed && (
           <div className="claimbar">
@@ -72,7 +83,7 @@ export default async function Profile({ params }: { params: { slug: string } }) 
 
         <div className="playout">
           <div>
-            <div className="pcard"><h3>Töökojast</h3><p style={{ color: 'var(--ink-soft)', fontSize: 16, lineHeight: 1.7 }}>{w.about || 'Töökoja kirjeldus lisatakse, kui töökoda oma profiili lunastab.'}</p>
+            <div className="pcard"><h3>Töökojast</h3><p style={{ color: 'var(--ink-soft)', fontSize: 16, lineHeight: 1.7 }}>{w.about || autoAbout(w)}</p>
               <div className="origin-note"><Icon.shield /> Need andmed pärinevad avalikest allikatest ({w.data_origin}). Kas midagi on valesti? Saad selle parandada, kui lunastad profiili.</div>
               <a className="gmaps-link" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(w.name + ' ' + (w.address || w.city || ''))}${w.google_place_id ? '&query_place_id=' + w.google_place_id : ''}`} target="_blank" rel="noreferrer"><Icon.star /> Loe arvustusi Google'is</a>
             </div>
@@ -120,4 +131,18 @@ function priceText(from: number | null, to: number | null) {
   if (from == null) return '—';
   if (to == null || to === from) return `alates ${from} €`;
   return `${from}–${to} €`;
+}
+
+function initials(name: string) {
+  const p = name.replace(/[^A-Za-zÄÖÜÕäöüõ0-9 ]/g, '').trim().split(/\s+/).filter(Boolean);
+  return ((p[0]?.[0] || 'A') + (p[1]?.[0] || '')).toUpperCase();
+}
+function coverColor(name: string) {
+  const cols = ['#0B5394', '#0A8F63', '#B4700F', '#5B3FA8', '#B03A5B', '#2B6CB0', '#1F7A5A'];
+  let h = 0; for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  return cols[h % cols.length];
+}
+function autoAbout(w: Workshop) {
+  const svc = w.services && w.services.length ? w.services.slice(0, 5).join(', ') : 'autoremont ja hooldus';
+  return `${w.name} on autotöökoda${w.city ? ' (' + w.city + ')' : ''}. Pakutavad teenused: ${svc}. Võrdle Autokompassis lahtiolekuaegu ja kontakti ning saada päring otse — kliendile tasuta.`;
 }
