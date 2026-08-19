@@ -167,8 +167,8 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
                   <div key={w.id} className={'rowcard' + (feat ? ' feat' : '')}>
                     {feat && <div className="feat-tag">Esiletõstetud</div>}
                     <Link href={`/tookoda/${w.slug}`} className="rthumb" style={{ background: `linear-gradient(135deg, ${thumbColor(w.name)}, ${thumbColor(w.name)}cc)` }} aria-label={w.name}>
-                      <span className="ri">{initials(w.name)}</span>
-                      <Icon.wrench />
+                      <img src={'/demo/' + ((w.name.length % 3) + 1) + '.jpg'} alt="" loading="lazy" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} /><span className="phtag">Näidisfoto</span>
+                      
                     </Link>
                     <div className="rmid">
                       <Link href={`/tookoda/${w.slug}`} className="rnm">{w.name}
@@ -187,7 +187,7 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
                         {w.rating_count > 0 ? (
                           <><div className="num">{w.rating_avg.toFixed(1).replace('.', ',')}</div><Stars /><div className="rc">{w.rating_count} arvustust</div></>
                         ) : (
-                          <span className="newpill">Uus töökoda</span>
+                          <span className="newpill">Arvustusi veel pole</span>
                         )}
                       </div>
                       <div className="ract">
