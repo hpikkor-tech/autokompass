@@ -392,7 +392,7 @@ footer.ft{background:var(--ink);color:#B7C4D6;padding:60px 40px 30px;margin-top:
 .rowcard.feat{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber) inset}
 .feat-tag{position:absolute;top:-9px;left:16px;background:var(--amber);color:#3A2A05;font-family:'Lexend';font-weight:800;font-size:11px;letter-spacing:.03em;padding:3px 10px;border-radius:7px;text-transform:uppercase}
 .rthumb{position:relative;border-radius:12px;overflow:hidden;min-height:132px;display:flex;align-items:center;justify-content:center;color:#fff}
-.rthumb .ri{font-family:'Lexend';font-weight:800;font-size:40px;letter-spacing:-.03em;opacity:.96}
+.rthumb .ri{font-family:'Lexend';font-weight:800;font-size:40px;letter-spacing:-.03em;opacity:.96}.rthumb .phtag{position:absolute;left:8px;bottom:8px;z-index:2;background:rgba(9,17,33,.72);color:#f0d9ac;font-size:10.5px;font-weight:700;letter-spacing:.03em;padding:4px 9px;border-radius:999px;line-height:1}
 .rthumb svg{position:absolute;right:10px;bottom:10px;width:22px;height:22px;opacity:.45}
 .rmid{display:flex;flex-direction:column;min-width:0}
 .rnm{font-family:'Lexend';font-weight:700;font-size:18.5px;color:var(--ink);display:flex;align-items:center;gap:9px;flex-wrap:wrap}
