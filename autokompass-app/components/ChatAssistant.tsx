@@ -53,7 +53,7 @@ export function ChatAssistant() {
         <div><div className="cn">Kompu</div><div className="cs">Autokompassi abiline · vastab kohe</div></div>
       </div>
       <div className="chatloc"><Icon.pin /><span className="lb">Sinu asukoht</span>
-        <input value={loc} onChange={(e) => setLoc(e.target.value)} placeholder="nt Algi tn 34, Tallinn — näitan lähimaid" />
+        <input value={loc} onChange={(e) => setLoc(e.target.value)} placeholder="nt Tallinn või Tartu — näitan lähimaid" />
       </div>
       <div className="chatlog" ref={logRef}>
         {msgs.map((m, i) => (
