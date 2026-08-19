@@ -51,7 +51,7 @@ export default async function Profile({ params }: { params: { slug: string } }) 
         <div className="phead">
           <h1>{w.name} {w.claimed && <span className="badge-v" style={{ fontSize: 14, padding: '6px 11px' }}><Icon.check /> Kontrollitud töökoda</span>}</h1>
           <div className="pmeta">
-            <Stars /> <b style={{ color: 'var(--ink)' }}>{w.rating_avg > 0 ? w.rating_avg.toFixed(1).replace('.', ',') : '—'}</b> ({w.rating_count} arvustust)
+            {w.rating_count > 0 ? (<><Stars /> <b style={{ color: 'var(--ink)' }}>{w.rating_avg.toFixed(1).replace('.', ',')}</b> ({w.rating_count} arvustust)</>) : (<span>Arvustusi veel pole</span>)}
             <span>·</span> <Icon.pin /> {w.address || w.city}
           </div>
         </div>
@@ -119,7 +119,7 @@ export default async function Profile({ params }: { params: { slug: string } }) 
           </div>
 
           <aside>
-            <QuoteForm workshopId={w.id} phone={w.phone} address={w.address || w.city} />
+            <div className="qbox"><h3 style={{fontFamily:'Lexend',fontSize:19,marginBottom:8}}>Broneeri aeg</h3><p style={{color:'var(--muted)',fontSize:14.5,marginBottom:14}}>Broneerimine ja hinnainfo käivad otse töökojas.</p>{w.website && <a className="btn btn-p" style={{width:'100%',marginBottom:10}} href={w.website} target="_blank" rel="noreferrer">Broneeri töökoja kodulehel</a>}{w.phone && <a className="btn btn-o" style={{width:'100%'}} href={'tel:' + w.phone.replace(/\s/g, '')}><Icon.phone /> {w.phone}</a>}<a className="btn btn-o" style={{width:'100%',marginTop:10}} href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(w.name + ' ' + (w.address || w.city || 'Eesti'))} target="_blank" rel="noreferrer">Vaata Google'i kaardil</a></div>
           </aside>
         </div>
       </div>
