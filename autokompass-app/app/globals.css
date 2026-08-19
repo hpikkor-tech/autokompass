@@ -72,7 +72,7 @@ header.site{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.92);ba
 /* hero */
 .hero{position:relative;min-height:calc(100dvh - 68px);display:flex;align-items:center;background-size:cover;background-position:center 40%;overflow:hidden}
 .hero::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(9,17,33,.94),rgba(9,17,33,.8) 42%,rgba(9,17,33,.34) 78%,rgba(9,17,33,.15))}
-.hero .inner{position:relative;z-index:2;width:100%;padding:40px 0 54px}
+.hero .inner{position:relative;z-index:2;width:100%;padding:40px 24px 54px}
 .hero .col{max-width:660px}
 .hero .eyebrow{color:#ffd68a}
 .hero h1{color:#fff;font-size:clamp(34px,4.6vw,58px);font-weight:800;line-height:1.04;margin:16px 0 0}
@@ -81,7 +81,7 @@ header.site{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.92);ba
 .searchcard{margin-top:30px;background:#fff;border-radius:18px;padding:12px;box-shadow:var(--shadow-lg);display:flex;gap:10px;max-width:640px}
 .searchcard select{flex:1;appearance:none;border:1.5px solid var(--line);border-radius:12px;padding:15px 14px;font-family:inherit;font-size:15.5px;font-weight:600;color:var(--ink)}
 .searchcard .btn{padding:15px 22px;font-size:15.5px}
-@media(max-width:600px){.searchcard{flex-direction:column}}
+@media(max-width:600px){.searchcard{flex-direction:column}}@media(max-width:700px){.hero{min-height:auto}.hero .inner{padding:34px 20px 46px}.hero h1{font-size:32px}}
 .herotrust{display:flex;gap:20px;flex-wrap:wrap;margin-top:20px}
 .herotrust span{display:inline-flex;align-items:center;gap:7px;color:#CBD7E6;font-weight:600;font-size:14.5px}
 .herotrust span svg{width:16px;height:16px;color:var(--amber)}
