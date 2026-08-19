@@ -59,7 +59,7 @@ export default async function Home() {
           <div className="col">
             <span className="eyebrow">Eesti autotöökodade võrdlus</span>
             <h1>Säästa <b>aega ja raha</b> oma auto remondil.</h1>
-            <p className="sub">Võrdle hindu, arvustusi ja vaba aega üle 1 200 töökoja seast. Kirjelda oma muret — leiame sulle parima pakkumise, ilma järjekorras ootamata.</p>
+            <p className="sub">Võrdle hindu, arvustusi ja vaba aega 370+ töökoja seast üle Eesti. Kirjelda oma muret — leiame sulle parima pakkumise, ilma järjekorras ootamata.</p>
             <form className="searchcard" action="/tookojad">
               <select name="svc" defaultValue=""><option value="">Milline teenus?</option>{SERVICES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>
               <select name="city" defaultValue=""><option value="">Kus linnas?</option>{CITIES.map((c) => <option key={c} value={c}>{c}</option>)}</select>
@@ -77,8 +77,8 @@ export default async function Home() {
       <section className="statwrap">
         <div className="wrap">
           <div className="statstrip">
-            <div className="st"><div className="stn">1 200+</div><div className="stl">töökoda kaardil</div></div>
-            <div className="st"><div className="stn">14</div><div className="stl">linna üle Eesti</div></div>
+            <div className="st"><div className="stn">370+</div><div className="stl">töökoda kaardil</div></div>
+            <div className="st"><div className="stn">23</div><div className="stl">linna üle Eesti</div></div>
             <div className="st"><div className="stn">0 €</div><div className="stl">kliendile — alati tasuta</div></div>
             <div className="st"><div className="stn">8</div><div className="stl">teenusekategooriat</div></div>
           </div>
