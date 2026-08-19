@@ -138,7 +138,7 @@ section.blk{padding:70px 0}
 @media(max-width:640px){.rowcard{grid-template-columns:1fr}.rowcard .rright{border-left:none;border-top:1px solid var(--line-2);padding-left:0;padding-top:14px;flex-direction:row;align-items:center}}
 
 /* profile */
-.pv{padding:24px 0 70px}
+.pv{padding:24px 24px 70px}
 .backlink{display:inline-flex;align-items:center;gap:7px;color:var(--blue);font-weight:700;font-size:14.5px;margin-bottom:18px}
 .phead h1{font-size:clamp(26px,3vw,36px);font-weight:800;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .phead .pmeta{display:flex;align-items:center;gap:10px;margin-top:12px;color:var(--muted);font-weight:600;font-size:15px;flex-wrap:wrap}
