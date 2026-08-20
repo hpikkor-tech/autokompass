@@ -110,7 +110,7 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
 
       <div className="wrap">
         <div className="listlayout">
-          <aside className="filters">
+          <input type="checkbox" id="fto" className="fto" /><label htmlFor="fto" className="fbtn">Filtrid{activeFilters > 0 ? ' (' + activeFilters + ')' : ''}</label><aside className="filters">
             <div className="filt-top"><h4>Filtrid</h4>{activeFilters > 0 && <Link href="/tookojad" className="clearf">Tühjenda</Link>}</div>
 
             <div className="fgroup"><div className="gt">Teenus</div>
