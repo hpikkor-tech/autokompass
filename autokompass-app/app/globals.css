@@ -476,4 +476,4 @@ footer.ft{background:var(--ink);color:#B7C4D6;padding:60px 40px 30px;margin-top:
 .origin-note svg{width:15px;height:15px;color:var(--muted-2);flex:0 0 15px;margin-top:1px}
 .gmaps-link{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--line);border-radius:11px;padding:11px 15px;font-weight:700;font-size:14.5px;color:var(--ink);margin-top:12px}
 .gmaps-link:hover{border-color:#c9d3e0;background:#fbfcfe}
-.gmaps-link svg{width:17px;height:17px;color:var(--amber)}
+.gmaps-link svg{width:17px;height:17px;color:var(--amber)}.fto,.fbtn{display:none}@media(max-width:900px){.fbtn{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;font-family:'Lexend';font-weight:700;font-size:15px;color:var(--ink);cursor:pointer;margin-top:4px}.fbtn::after{content:'\25be';color:var(--blue);font-size:17px}.filters{display:none}.fto:checked~.filters{display:block}.fto:checked~.fbtn::after{content:'\25b4'}}
