@@ -5,7 +5,7 @@ import { createPublicClient } from '@/lib/supabase/server';
 import { Icon, Stars } from '@/components/icons';
 import { QuoteForm } from '@/components/QuoteForm';
 import { ReviewForm } from '@/components/ReviewForm';
-import type { Workshop, Review } from '@/lib/types';
+import type { Workshop, Review } from '@/lib/types'; import { GHero, GReviews } from '@/components/GPlace'; import { getPlace } from '@/lib/gplaces';
 
 export const revalidate = 300;
 export const dynamicParams = true;
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function Profile({ params }: { params: { slug: string } }) {
   const w = await getWorkshop(params.slug);
   if (!w) notFound();
-  let revs: Review[] = [];
+  const gp = (w.google_place_id && w.google_place_id !== 'NONE') ? await getPlace(w.google_place_id) : null; let revs: Review[] = [];
   try {
     const supabase = createPublicClient();
     const { data: reviews } = await supabase
@@ -51,17 +51,17 @@ export default async function Profile({ params }: { params: { slug: string } }) 
         <div className="phead">
           <h1>{w.name} {w.claimed && <span className="badge-v" style={{ fontSize: 14, padding: '6px 11px' }}><Icon.check /> Kontrollitud töökoda</span>}</h1>
           <div className="pmeta">
-            {w.rating_count > 0 ? (<><Stars /> <b style={{ color: 'var(--ink)' }}>{w.rating_avg.toFixed(1).replace('.', ',')}</b> ({w.rating_count} arvustust)</>) : (<span>Arvustusi veel pole</span>)}
+            {w.rating_count > 0 ? (<><Stars /> <b style={{ color: 'var(--ink)' }}>{w.rating_avg.toFixed(1).replace('.', ',')}</b> ({w.rating_count} arvustust)</>) : gp?.rating ? (<><Stars /> <b style={{ color: 'var(--ink)' }}>{gp.rating.toFixed(1).replace('.', ',')}</b> ({gp.userRatingCount ?? 0} arvustust Google'is)</>) : (<span>Arvustusi veel pole</span>)}
             <span>·</span> <Icon.pin /> {w.address || w.city}
           </div>
         </div>
 
-        {hasPhotos ? (
+        {!hasPhotos && <GHero w={w} />}{hasPhotos ? (
           <div className="gallery">
             {w.photos.slice(0, 5).map((src, i) => <div className="g" key={i}><img src={src} alt={w.name} /></div>)}
           </div>
         ) : (
-          <div className="galcard" style={{ background: `linear-gradient(135deg, ${coverColor(w.name)}, #0f1b2d)` }}>
+          <div className="galcard gone" style={{ background: `linear-gradient(135deg, ${coverColor(w.name)}, #0f1b2d)` }}>
             <div className="gcmono">{initials(w.name)}</div>
             <div className="gcbody">
               <div className="gcname">{w.name}</div>
@@ -101,7 +101,7 @@ export default async function Profile({ params }: { params: { slug: string } }) 
               <p style={{ color: 'var(--muted-2)', fontSize: 13, marginTop: 14 }}>Hinnad on orienteeruvad. Täpne pakkumine pärast päringut.</p>
             </div>
 
-            <div className="pcard"><h3>Arvustused ({w.rating_count})</h3>
+            <GReviews w={w} /><div className="pcard"><h3>Arvustused Autokompassis ({w.rating_count})</h3>
               <ReviewForm workshopId={w.id} />
               <div style={{ marginTop: 8 }}>
                 {revs.map((r) => (
