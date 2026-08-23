@@ -6,7 +6,7 @@ import { OpenStatus } from '@/components/OpenStatus';
 import { ListingMap } from '@/components/ListingMap';
 import { SVC_CATS, displayServices, matchesSvcW, svcLabel } from '@/lib/serviceTags';
 import { compactHours } from '@/lib/hours';
-import type { Workshop } from '@/lib/types'; import { GThumb } from '@/components/GPlace';
+import type { Workshop } from '@/lib/types'; import { GThumb } from '@/components/GPlace'; import { SortSelect } from '@/components/SortSelect';
 
 export const revalidate = 120;
 
@@ -148,13 +148,13 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
                 {city && <input type="hidden" name="city" value={city} />}
                 {ver && <input type="hidden" name="ver" value={ver} />}
                 {web && <input type="hidden" name="web" value={web} />}
-                <label>Järjesta:</label>
-                <select name="sort" defaultValue={sort} onChange={undefined}>
+                <label>Järjesta:</label><SortSelect value={sort} base={(svc ? 'svc=' + encodeURIComponent(svc) + '&' : '') + (city ? 'city=' + encodeURIComponent(city) + '&' : '') + (ver ? 'ver=1&' : '') + (web ? 'web=1&' : '')} />
+                <select name="sort" defaultValue={sort} onChange={undefined} style={{display:'none'}}>
                   <option value="rec">Soovituslik</option>
                   <option value="az">Nime järgi (A–Z)</option>
                   <option value="rate">Hinnatuimad</option>
                 </select>
-                <button className="btn btn-o btn-sm" type="submit">OK</button>
+                {null}
               </form>
             </div>
 
