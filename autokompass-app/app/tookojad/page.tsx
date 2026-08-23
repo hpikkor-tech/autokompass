@@ -56,7 +56,7 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
   let all: Workshop[] = [];
   try {
     const supabase = createPublicClient();
-    const { data } = await supabase.from('workshops').select('*').eq('is_hidden', false).limit(500);
+    const { data } = await supabase.from('workshops').select('*').eq('is_hidden', false).limit(5000);
     all = (data as Workshop[] | null) ?? [];
   } catch { /* DB pole seadistatud */ }
 
