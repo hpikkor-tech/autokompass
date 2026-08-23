@@ -6,7 +6,7 @@ import { OpenStatus } from '@/components/OpenStatus';
 import { ListingMap } from '@/components/ListingMap';
 import { SVC_CATS, displayServices, matchesSvcW, svcLabel } from '@/lib/serviceTags';
 import { compactHours } from '@/lib/hours';
-import type { Workshop } from '@/lib/types';
+import type { Workshop } from '@/lib/types'; import { GThumb } from '@/components/GPlace';
 
 export const revalidate = 120;
 
@@ -167,7 +167,7 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
                   <div key={w.id} className={'rowcard' + (feat ? ' feat' : '')}>
                     {feat && <div className="feat-tag">Esiletõstetud</div>}
                     <Link href={`/tookoda/${w.slug}`} className="rthumb" style={{ background: `linear-gradient(135deg, ${thumbColor(w.name)}, ${thumbColor(w.name)}cc)` }} aria-label={w.name}>
-                      <img src={'/demo/' + ((w.name.length % 3) + 1) + '.jpg'} alt="" loading="lazy" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} /><span className="phtag">Näidisfoto</span>
+                      <GThumb w={w} />
                       
                     </Link>
                     <div className="rmid">
