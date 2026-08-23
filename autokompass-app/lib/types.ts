@@ -28,7 +28,7 @@ export interface Workshop {
   services: string[];
   brand: string | null;
   is_hidden: boolean;
-  rating_avg: number;
+  rating_avg: number; google_rating: number | null; google_rating_count: number | null;
   rating_count: number;
   created_at: string;
   updated_at: string;
