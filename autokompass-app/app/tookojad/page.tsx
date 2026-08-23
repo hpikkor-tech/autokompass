@@ -72,10 +72,10 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
 
   // Lõplik filtreeritud + sorteeritud nimekiri
   let list = applyFilters(all, { svc, city, ver, web });
-  list = list.sort((a, b) => {
+  const er = (w: Workshop) => (w.rating_count > 0 ? w.rating_avg : (w.google_rating ? Number(w.google_rating) : 0)); list = list.sort((a, b) => {
     if (sort === 'az') return a.name.localeCompare(b.name, 'et');
-    if (sort === 'rate') return (b.rating_avg - a.rating_avg) || a.name.localeCompare(b.name, 'et');
-    return (TIER_RANK[b.featured_tier] - TIER_RANK[a.featured_tier]) || (b.rating_avg - a.rating_avg) || a.name.localeCompare(b.name, 'et');
+    if (sort === 'rate') return (er(b) - er(a)) || ((b.rating_count || b.google_rating_count || 0) - (a.rating_count || a.google_rating_count || 0)) || a.name.localeCompare(b.name, 'et');
+    return (TIER_RANK[b.featured_tier] - TIER_RANK[a.featured_tier]) || (er(b) - er(a)) || a.name.localeCompare(b.name, 'et');
   });
 
   const total = list.length;
@@ -187,7 +187,7 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
                         {w.rating_count > 0 ? (
                           <><div className="num">{w.rating_avg.toFixed(1).replace('.', ',')}</div><Stars /><div className="rc">{w.rating_count} arvustust</div></>
                         ) : (
-                          <span className="newpill">Arvustusi veel pole</span>
+                          w.google_rating && w.google_rating_count ? <><div className="num">{Number(w.google_rating).toFixed(1).replace('.', ',')}</div><Stars /><div className="rc">{w.google_rating_count} arvustust Google'is</div></> : <span className="newpill">Arvustusi veel pole</span>
                         )}
                       </div>
                       <div className="ract">
