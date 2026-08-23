@@ -101,7 +101,7 @@ export default async function Profile({ params }: { params: { slug: string } }) 
               <p style={{ color: 'var(--muted-2)', fontSize: 13, marginTop: 14 }}>Hinnad on orienteeruvad. Täpne pakkumine pärast päringut.</p>
             </div>
 
-            <GReviews w={w} /><div className="pcard"><h3>Arvustused Autokompassis ({w.rating_count})</h3>
+            {gp?.regularOpeningHours?.weekdayDescriptions?.length ? <div className="pcard"><h3>Lahtiolekuajad</h3><ul className="ghours">{gp.regularOpeningHours.weekdayDescriptions.map((d: string, i: number) => <li key={i}>{d}</li>)}</ul><p className="gsrc">Allikas: Google</p></div> : null}<GReviews w={w} /><div className="pcard"><h3>Arvustused Autokompassis ({w.rating_count})</h3>
               <ReviewForm workshopId={w.id} />
               <div style={{ marginTop: 8 }}>
                 {revs.map((r) => (
@@ -119,7 +119,7 @@ export default async function Profile({ params }: { params: { slug: string } }) 
           </div>
 
           <aside>
-            <div className="qbox"><h3 style={{fontFamily:'Lexend',fontSize:19,marginBottom:8}}>Broneeri aeg</h3><p style={{color:'var(--muted)',fontSize:14.5,marginBottom:14}}>Broneerimine ja hinnainfo käivad otse töökojas.</p>{w.website && <a className="btn btn-p" style={{width:'100%',marginBottom:10}} href={w.website} target="_blank" rel="noreferrer">Broneeri töökoja kodulehel</a>}{w.phone && <a className="btn btn-o" style={{width:'100%'}} href={'tel:' + w.phone.replace(/\s/g, '')}><Icon.phone /> {w.phone}</a>}<a className="btn btn-o" style={{width:'100%',marginTop:10}} href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(w.name + ' ' + (w.address || w.city || 'Eesti'))} target="_blank" rel="noreferrer">Vaata Google'i kaardil</a></div>
+            <div className="qbox"><h3 style={{fontFamily:'Lexend',fontSize:19,marginBottom:8}}>Broneeri aeg</h3><p style={{color:'var(--muted)',fontSize:14.5,marginBottom:14}}>Broneerimine ja hinnainfo käivad otse töökojas.</p>{w.website && <a className="btn btn-p" style={{width:'100%',marginBottom:10}} href={w.website} target="_blank" rel="noreferrer">Broneeri töökoja kodulehel</a>}{(w.phone || gp?.nationalPhoneNumber) && <a className="btn btn-o" style={{width:'100%'}} href={'tel:' + (w.phone || gp.nationalPhoneNumber).replace(/\s/g, '')}><Icon.phone /> {w.phone || gp.nationalPhoneNumber}</a>}<a className="btn btn-o" style={{width:'100%',marginTop:10}} href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(w.name + ' ' + (w.address || w.city || 'Eesti'))} target="_blank" rel="noreferrer">Vaata Google'i kaardil</a></div>
           </aside>
         </div>
       </div>
