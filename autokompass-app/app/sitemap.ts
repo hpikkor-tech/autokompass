@@ -24,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     const supabase = createPublicClient();
-    const { data } = await supabase.from('workshops').select('slug, updated_at').eq('is_hidden', false).limit(2000);
+    const { data } = await supabase.from('workshops').select('slug, updated_at').eq('is_hidden', false).limit(5000);
     for (const w of (data as { slug: string; updated_at: string }[] | null) ?? []) {
       urls.push({ url: `${BASE}/tookoda/${w.slug}`, lastModified: w.updated_at ? new Date(w.updated_at) : now, changeFrequency: 'monthly', priority: 0.6 });
     }
