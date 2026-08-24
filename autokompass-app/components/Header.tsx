@@ -2,11 +2,11 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { Mark, Icon } from './icons';
+import { Mark, Icon } from './icons'; import { createClient } from '@/lib/supabase/client';
 
 export function Header() {
   const [open, setOpen] = useState(false);
-  const pathname = usePathname();
+  const pathname = usePathname(); const [user, setUser] = useState<{ email: string } | null>(null); useEffect(() => { createClient().auth.getUser().then(({ data }) => setUser(data.user ? { email: data.user.email ?? '' } : null)); }, [pathname]);
 
   // Sulge menüü lehe vahetusel.
   useEffect(() => { setOpen(false); }, [pathname]);
@@ -33,7 +33,7 @@ export function Header() {
 
         <div className="right">
           <Link href="/sisene?mode=shop" className="ghost">Lisa oma töökoda</Link>
-          <Link href="/sisene?mode=client" className="btn btn-p btn-sm"><Icon.user /> Sisene</Link>
+          {user ? <Link href="/konto" className="btn btn-p btn-sm"><Icon.user /> Minu konto</Link> : <Link href="/sisene?mode=client" className="btn btn-p btn-sm"><Icon.user /> Sisene</Link>}
         </div>
 
         <button
@@ -56,7 +56,7 @@ export function Header() {
             <Link href="/blogi">Blogi</Link>
             <div className="navsheet-actions">
               <Link href="/sisene?mode=shop" className="btn btn-o btn-block">Lisa oma töökoda</Link>
-              <Link href="/sisene?mode=client" className="btn btn-p btn-block"><Icon.user /> Sisene</Link>
+              {user ? <Link href="/konto" className="btn btn-p btn-block"><Icon.user /> Minu konto</Link> : <Link href="/sisene?mode=client" className="btn btn-p btn-block"><Icon.user /> Sisene</Link>}
             </div>
           </div>
         </>
