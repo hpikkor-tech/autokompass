@@ -8,7 +8,7 @@ import { SVC_CATS, displayServices, matchesSvcW, svcLabel } from '@/lib/serviceT
 import { compactHours } from '@/lib/hours';
 import type { Workshop } from '@/lib/types'; import { GThumb } from '@/components/GPlace'; import { SortSelect } from '@/components/SortSelect';
 
-export const revalidate = 120;
+export const revalidate = 0; export const fetchCache = 'force-no-store';
 
 const TIER_RANK: Record<string, number> = { spotlight: 3, featured: 2, pro: 1, none: 0 };
 const PER_PAGE = 24;
