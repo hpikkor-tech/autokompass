@@ -248,8 +248,8 @@ footer.ft{background:var(--ink);color:#B7C4D6;padding:60px 40px 30px;margin-top:
 .bloglead{display:grid;grid-template-columns:1.1fr 1.4fr;gap:26px;background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;transition:box-shadow .2s,border-color .2s;margin-bottom:30px}
 .bloglead:hover{box-shadow:var(--shadow-lg);border-color:#d5deea}
 @media(max-width:760px){.bloglead{grid-template-columns:1fr}}
-.blcover{background:linear-gradient(150deg,var(--blue-t),#dfeaf5);display:flex;align-items:center;justify-content:center;font-size:80px;min-height:230px}
-.blcover.sm{min-height:130px;font-size:52px}
+.blcover{background:linear-gradient(150deg,var(--blue-t),#dfeaf5);display:flex;align-items:center;justify-content:center;font-size:80px;min-height:300px}
+.blcover.sm{min-height:210px;font-size:52px}
 .bloglead .blbody{padding:28px 28px 28px 4px;display:flex;flex-direction:column;justify-content:center}
 @media(max-width:760px){.bloglead .blbody{padding:22px}}
 .bloglead h2{font-size:26px;margin:12px 0 10px;line-height:1.2}
