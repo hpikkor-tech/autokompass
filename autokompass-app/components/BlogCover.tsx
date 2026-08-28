@@ -22,7 +22,7 @@ function Frame({ id, from, to, children }: { id: string; from: string; to: strin
 }
 
 export function BlogCover({ art, className }: Props) {
-  const wrap = (node: React.ReactNode) => <div className={'bcover ' + (className || '')}>{node}</div>;
+  const wrap = (node: React.ReactNode) => <div className={'bcover ' + (className || '')}>{node}</div>; const PHOTO: Record<string, boolean> = { tire: true, choose: true, oil: true }; if (PHOTO[art]) return wrap(<img src={'/blog-' + art + '.webp'} alt="" className="bcsvg" style={{ objectFit: 'cover', objectPosition: art === 'choose' ? 'center 25%' : 'center' }} loading="lazy" />);
 
   switch (art) {
     case 'tire':
