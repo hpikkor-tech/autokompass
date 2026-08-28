@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const { data: quote, error } = await supabase
+  const admin0 = createAdminClient(); const { count: qc } = await admin0.from('quotes').select('id', { count: 'exact', head: true }).eq('phone', phone).gte('created_at', new Date(Date.now() - 3600000).toISOString()); if ((qc ?? 0) >= 6) return NextResponse.json({ error: 'Liiga palju paringuid, proovi hiljem' }, { status: 429 }); const { data: quote, error } = await supabase
     .from('quotes')
     .insert({ workshop_id, message, phone, name: name ?? null, category_id: category_id ?? null, user_id: user?.id ?? null })
     .select('id').single();
