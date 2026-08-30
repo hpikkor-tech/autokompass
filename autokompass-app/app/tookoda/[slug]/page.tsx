@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { BackToListing } from '@/components/ListingMemory';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { createPublicClient } from '@/lib/supabase/server';
@@ -47,7 +48,7 @@ export default async function Profile({ params }: { params: { slug: string } }) 
   return (
     <main>
       <div className="wrap pv">
-        <Link className="backlink" href="/tookojad"><Icon.arwr /> Tagasi töökodade juurde</Link>
+        <BackToListing />
         <div className="phead">
           <h1>{w.name} {w.claimed && <span className="badge-v" style={{ fontSize: 14, padding: '6px 11px' }}><Icon.check /> Kontrollitud töökoda</span>}</h1>
           <div className="pmeta">
