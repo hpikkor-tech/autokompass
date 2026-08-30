@@ -2,13 +2,22 @@
 // iga suurema mahuga linn saab oma lehe (/rehvivahetus/tallinn).
 // Sihitud märksõnad ja mahud: DataForSEO, Eesti, 08.2026 (vt auto-marksonauuring.xlsx).
 
-export type LandingCity = { slug: string; name: string; ine: string };
+export type LandingCity = { slug: string; name: string; ine: string; district?: boolean; parent?: string; blurb?: string };
 
 // Ainult päris mõõdetud mahuga linnad saavad lehe (väldime tühje teenus×linn lehti).
 export const CITIES: Record<string, LandingCity> = {
   tallinn: { slug: 'tallinn', name: 'Tallinn', ine: 'Tallinnas' },
   tartu: { slug: 'tartu', name: 'Tartu', ine: 'Tartus' },
   rakvere: { slug: 'rakvere', name: 'Rakvere', ine: 'Rakveres' },
+  // Tallinna linnaosad. Töökoda seotakse linnaosaga koordinaatide järgi (workshops.district).
+  kristiine: { slug: 'kristiine', name: 'Kristiine', ine: 'Kristiines', district: true, parent: 'tallinn', blurb: 'Kristiine on Tallinna töökodade tihedaim nurk: Sõpruse ja Tammsaare puiestee vahele jääb hulk väiksemaid remonditöökodi ning kesklinna on siit vaid mõni minut sõitu.' },
+  mustamae: { slug: 'mustamae', name: 'Mustamäe', ine: 'Mustamäel', district: true, parent: 'tallinn', blurb: 'Mustamäe töökojad on koondunud Kadaka ja Laki tänava kanti — seal on koos nii kiirhooldust kui suuremaid teenindusi, mis teenindavad kogu ümbritsevat magalarajooni.' },
+  lasnamae: { slug: 'lasnamae', name: 'Lasnamäe', ine: 'Lasnamäel', district: true, parent: 'tallinn', blurb: 'Lasnamäel on Tallinna kõige rohkem autotöökodi. Peterburi tee, Punase ja Suur-Sõjamäe ümbrus on linna tegelik autoteeninduse süda — valikut jagub nii soodsast garaažitöökojast margiesinduseni.' },
+  haabersti: { slug: 'haabersti', name: 'Haabersti', ine: 'Haaberstis', district: true, parent: 'tallinn', blurb: 'Haaberstis on töökojad hajali suuremate teede ääres, Õismäe ja Rocca al Mare kandis — mugav neile, kes liiguvad Paldiski maantee või ringtee kaudu.' },
+  nomme: { slug: 'nomme', name: 'Nõmme', ine: 'Nõmmel', district: true, parent: 'tallinn', blurb: 'Nõmme töökojad on väiksemad ja pereettevõtte-laadsed, enamik Pärnu maantee ja Vabaduse puiestee lähedal. Siin loeb hea meister sageli rohkem kui suur teenindushoone.' },
+  pirita: { slug: 'pirita', name: 'Pirita', ine: 'Pirital', district: true, parent: 'tallinn', blurb: 'Pirital on töökodi vähe ja need on väikesed. Paljud siinsed autoomanikud sõidavad hoolduseks Lasnamäele või kesklinna, mis jääb kümne minuti kaugusele.' },
+  'pohja-tallinn': { slug: 'pohja-tallinn', name: 'Põhja-Tallinn', ine: 'Põhja-Tallinnas', district: true, parent: 'tallinn', blurb: 'Põhja-Tallinnas, Kopli ja Sitsi kandis, tegutseb hulk vanema koolkonna remonditöökodi, kus tehakse lisaks hooldusele ka keevitus- ja keretöid.' },
+  kesklinn: { slug: 'kesklinn', name: 'Kesklinn', ine: 'Kesklinnas', district: true, parent: 'tallinn', blurb: 'Kesklinna töökojad sobivad kõige paremini neile, kes jätavad auto tööpäevaks hooldusesse — enamik asub Tartu maantee ja Pärnu maantee vahelisel alal, kõnnitee kaugusel kontorist.' },
 };
 
 export type Service = {
@@ -23,6 +32,7 @@ export type Service = {
   faq: { q: string; a: string }[];
   related: string[]; // teiste teenuste slug'id
   cities: string[]; // linna-slug'id, millel on oma leht
+  districts?: string[]; // Tallinna linnaosad, millel on oma leht
 };
 
 export const SERVICES: Service[] = [
@@ -47,6 +57,7 @@ export const SERVICES: Service[] = [
     ],
     related: ['autoremont', 'olivahetus', 'autohooldus'],
     cities: ['tallinn', 'tartu'],
+    districts: ['lasnamae', 'mustamae', 'kristiine', 'kesklinn', 'haabersti', 'pohja-tallinn', 'nomme'],
   },
   {
     slug: 'autoremont',
@@ -69,6 +80,7 @@ export const SERVICES: Service[] = [
     ],
     related: ['olivahetus', 'autodiagnostika', 'rehvivahetus'],
     cities: ['tallinn', 'tartu', 'rakvere'],
+    districts: ['lasnamae', 'kesklinn', 'kristiine', 'mustamae', 'nomme', 'pohja-tallinn', 'haabersti', 'pirita'],
   },
   {
     slug: 'olivahetus',
@@ -90,6 +102,7 @@ export const SERVICES: Service[] = [
     ],
     related: ['autohooldus', 'autoremont', 'autodiagnostika'],
     cities: [],
+    districts: ['lasnamae', 'kesklinn', 'kristiine', 'mustamae', 'nomme', 'pohja-tallinn', 'haabersti', 'pirita'],
   },
   {
     slug: 'autoklaasi-vahetus',
@@ -185,9 +198,15 @@ export function getCity(slug: string): LandingCity | undefined {
   return CITIES[slug];
 }
 
-// Kõik teenus×linn kombinatsioonid, millel on oma leht.
+// Kõik Tallinna linnaosad (filtrite ja siselinkide jaoks).
+export const DISTRICT_LIST: LandingCity[] = Object.values(CITIES).filter((c) => c.district);
+
+// Kõik teenus×linn ja teenus×linnaosa kombinatsioonid, millel on oma leht.
 export function cityPageParams(): { teenus: string; linn: string }[] {
   const out: { teenus: string; linn: string }[] = [];
-  for (const s of SERVICES) for (const c of s.cities) out.push({ teenus: s.slug, linn: c });
+  for (const s of SERVICES) {
+    for (const c of s.cities) out.push({ teenus: s.slug, linn: c });
+    for (const d of s.districts ?? []) out.push({ teenus: s.slug, linn: d });
+  }
   return out;
 }

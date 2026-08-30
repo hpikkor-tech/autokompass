@@ -1,0 +1,17 @@
+/* Listingu filtrid: mobiilipaneeli sulgemine, mitmikvalik, valitud filtrite ribad */
+.fopt.off{opacity:.45}
+.fopt.off b{color:var(--muted-2)}
+.filt-top-r{display:flex;align-items:center;gap:10px}
+.fhint{color:var(--muted);font-size:13px;line-height:1.45;margin:2px 0 12px}
+.fclose{display:none}
+.fdone{display:none}
+.chipbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.fchip{display:inline-flex;align-items:center;gap:7px;background:var(--blue-t);color:var(--blue);border:1px solid rgba(11,83,148,.18);border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:700}
+.fchip span{font-size:12px;opacity:.7}
+.fchip:hover{background:rgba(11,83,148,.14)}
+.fchip.clear{background:transparent;color:var(--muted);border-color:var(--line)}
+@media(max-width:900px){
+  .fclose{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:9px;background:var(--line-2);color:var(--ink);font-size:15px;font-weight:700;cursor:pointer;flex:0 0 32px}
+  .fdone{display:flex;align-items:center;justify-content:center;position:sticky;bottom:10px;margin-top:16px;height:50px;border-radius:12px;background:var(--blue);color:#fff;font-family:'Lexend';font-weight:700;font-size:15.5px;cursor:pointer;box-shadow:0 6px 18px rgba(11,83,148,.28)}
+  .filters{padding-bottom:14px}
+}

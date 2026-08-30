@@ -30,7 +30,7 @@ export default async function ServicePage({ params }: { params: { teenus: string
   let all: Workshop[] = [];
   try {
     const supabase = createPublicClient();
-    const { data } = await supabase.from('workshops').select('*').eq('is_hidden', false).limit(500);
+    const { data } = await supabase.from('workshops').select('*').eq('is_hidden', false).limit(5000);
     all = (data as Workshop[] | null) ?? [];
   } catch { /* DB pole seadistatud */ }
 
@@ -82,6 +82,15 @@ export default async function ServicePage({ params }: { params: { teenus: string
                 <h2>{s.h1} linnade kaupa</h2>
                 <div className="probs">
                   {s.cities.map((cs) => { const c = getCity(cs); return c ? <Link key={cs} href={`/${s.slug}/${cs}`} className="chip"><Icon.pin /> {s.h1} {c.ine}</Link> : null; })}
+                </div>
+              </section>
+            )}
+
+            {(s.districts ?? []).length > 0 && (
+              <section className="lsec">
+                <h2>{s.h1} Tallinna linnaosades</h2>
+                <div className="probs">
+                  {(s.districts ?? []).map((ds) => { const d = getCity(ds); return d ? <Link key={ds} href={`/${s.slug}/${ds}`} className="chip"><Icon.pin /> {s.h1} {d.ine}</Link> : null; })}
                 </div>
               </section>
             )}
