@@ -38,8 +38,8 @@ export default async function ServiceCityPage({ params }: { params: { teenus: st
     const supabase = createPublicClient();
     const base = supabase.from('workshops').select('*').eq('is_hidden', false);
     const { data } = c.district
-      ? await base.eq('district', c.slug).limit(500)
-      : await base.eq('city', c.name).limit(500);
+      ? await base.eq('district', c.slug).limit(2000)
+      : await base.eq('city', c.name).limit(2000);
     all = (data as Workshop[] | null) ?? [];
   } catch { /* DB pole seadistatud */ }
 
