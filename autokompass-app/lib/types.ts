@@ -10,6 +10,7 @@ export interface Workshop {
   emtak_code: string | null;
   address: string | null;
   city: string | null;
+  district?: string | null;
   county: string | null;
   lat: number | null;
   lng: number | null;
