@@ -86,6 +86,15 @@ export default async function ServicePage({ params }: { params: { teenus: string
               </section>
             )}
 
+            {(s.districts ?? []).length > 0 && (
+              <section className="lsec">
+                <h2>{s.h1} Tallinna linnaosades</h2>
+                <div className="probs">
+                  {(s.districts ?? []).map((ds) => { const d = getCity(ds); return d ? <Link key={ds} href={`/${s.slug}/${ds}`} className="chip"><Icon.pin /> {s.h1} {d.ine}</Link> : null; })}
+                </div>
+              </section>
+            )}
+
             <section className="lsec">
               <h2>Korduma kippuvad küsimused</h2>
               <div className="faq">
