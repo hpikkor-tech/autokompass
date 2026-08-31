@@ -8,15 +8,66 @@ export const maxDuration = 60;
 // Google'i poliitika: Places'i sisu tohib DB-s hoida kuni 30 paeva.
 // Varskendame kui snapshot on vanem kui 25 paeva -> 5 paeva varu.
 //
-// Sama paring toob nuud KA foto. Pohjus: 'rating,userRatingCount' on juba
-// Enterprise-tasandi FieldMask ja 'photos' on Essentials -- arve kaib korgeima
-// tasandi jargi, seega foto lisamine samasse paringusse on TASUTA.
-// Varem kusisime fotot iga lehe renderdusega (listingus 24 kaarti x 2 kutset),
-// mis andis ~33 000 API-kutset paevas. Nuud ~1 kutse tookoja kohta 25 paeva jooksul.
+// FieldMask korgeim tasand on Enterprise ('rating', 'userRatingCount',
+// 'regularOpeningHours'). Arve kaib KORGEIMA tasandi jargi, seega Pro-valjad
+// ('nationalPhoneNumber', 'websiteUri') ja Essentials ('photos') on samas
+// paringus TASUTA. Sellepdrast kusime kohe koik korraga.
+//
+// Miks see oluline on: 31.08 seisuga oli 1437 tookojal 1751-st EI telefoni
+// EGA veebilehte -- kasutaja joudis profiilile ja sealt polnud kuhugi edasi
+// minna. Andmed on Google'is olemas, me lihtsalt ei kusinud neid.
 const STALE_DAYS = 25;
 const BATCH = 50;          // rida korraga Supabase'ist
-const CONCURRENCY = 6;     // paralleelseid Google'i paringuid (nuud 2 kutset rea kohta)
+const CONCURRENCY = 6;     // paralleelseid Google'i paringuid
 const BUDGET_MS = 45000;   // jata maxDuration = 60 sisse varu
+
+const DTOK = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+
+// Google regularOpeningHours.periods -> OSM-stiilis string, mida lib/hours.ts loeb.
+// Google'i day: 0 = puhapaev ... 6 = laupaev -- sama indeks mis lib/hours.ts DAY-s.
+// Mitu vahemikku samal paeval liidetakse uheks (varaseim avamine -> hiliseim
+// sulgemine), sest compactHours naitab ainult esimest reeglit.
+function hoursFromGoogle(roh: unknown): string | null {
+  const periods = (roh as { periods?: unknown })?.periods;
+  if (!Array.isArray(periods) || periods.length === 0) return null;
+
+  // Uks periood ilma sulgemiseta = oopaevaringselt avatud
+  if (periods.length === 1 && (periods[0] as { open?: unknown })?.open && !(periods[0] as { close?: unknown })?.close) {
+    return '24/7';
+  }
+
+  const mins: (number | null)[][] = [[], [], [], [], [], [], []].map(() => [null, null] as (number | null)[]);
+  for (const p of periods) {
+    const o = (p as { open?: { day?: number; hour?: number; minute?: number } }).open;
+    const c = (p as { close?: { hour?: number; minute?: number } }).close;
+    if (!o || typeof o.day !== 'number' || o.day < 0 || o.day > 6 || !c) continue;
+    const start = (o.hour ?? 0) * 60 + (o.minute ?? 0);
+    const end = (c.hour ?? 0) * 60 + (c.minute ?? 0);
+    if (end <= start) continue; // ule kesooe ulatuv vahemik -- jata vahele
+    const cur = mins[o.day];
+    cur[0] = cur[0] === null ? start : Math.min(cur[0], start);
+    cur[1] = cur[1] === null ? end : Math.max(cur[1], end);
+  }
+
+  const hhmm = (m: number) => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+  const span = (d: number) => (mins[d][0] === null ? '' : hhmm(mins[d][0] as number) + '-' + hhmm(mins[d][1] as number));
+
+  // Grupeeri jarjestikused paevad sama ajaga, alusta esmaspaevast
+  const order = [1, 2, 3, 4, 5, 6, 0];
+  const out: string[] = [];
+  let i = 0;
+  while (i < order.length) {
+    const key = span(order[i]);
+    if (!key) { i++; continue; }
+    let j = i;
+    while (j + 1 < order.length && span(order[j + 1]) === key) j++;
+    out.push((i === j ? DTOK[order[i]] : DTOK[order[i]] + '-' + DTOK[order[j]]) + ' ' + key);
+    i = j + 1;
+  }
+  return out.length ? out.join('; ') : null;
+}
+
+const empty = (v: unknown) => v === null || v === undefined || String(v).trim() === '';
 
 export async function GET(req: Request) {
   const started = Date.now();
@@ -51,7 +102,8 @@ export async function GET(req: Request) {
     `google_rating_at.is.null,google_rating_at.lt.${cutoff},` +
     `photo_at.is.null,photo_at.lt.${cutoff}`;
 
-  let processed = 0, done = 0, fail = 0, batches = 0, photos = 0;
+  let processed = 0, done = 0, fail = 0, batches = 0;
+  let photos = 0, phones = 0, sites = 0, hours = 0;
   let lastId: string | number | null = null;
   let timedOut = false;
 
@@ -61,7 +113,7 @@ export async function GET(req: Request) {
     // Kursor id jargi: ebaonnestunud read ei satu samasse joosku tagasi.
     // Ilma selleta tuleks sama 50 rida lopmatult ringi ja pouks API-kvoodi.
     let q = sb.from('workshops')
-      .select('id,google_place_id')
+      .select('id,google_place_id,phone,website,opening_hours,claimed')
       .eq('is_hidden', false)
       .not('google_place_id', 'is', null)
       .neq('google_place_id', 'NONE')
@@ -90,7 +142,8 @@ export async function GET(req: Request) {
             {
               headers: {
                 'X-Goog-Api-Key': KEY,
-                'X-Goog-FieldMask': 'rating,userRatingCount,photos',
+                'X-Goog-FieldMask':
+                  'rating,userRatingCount,photos,nationalPhoneNumber,websiteUri,regularOpeningHours',
               },
               cache: 'no-store',
             }
@@ -119,7 +172,7 @@ export async function GET(req: Request) {
           }
 
           const now = new Date().toISOString();
-          await sb.from('workshops').update({
+          const patch: Record<string, unknown> = {
             google_rating: d.rating ?? null,
             google_rating_count: d.userRatingCount ?? 0,
             google_rating_at: now,
@@ -127,7 +180,20 @@ export async function GET(req: Request) {
             photo_attr: photoAttr,
             photo_name: ph?.name ?? null,
             photo_at: now,
-          }).eq('id', w.id);
+          };
+
+          // Kontakt ja lahtiolek: taidame AINULT tuhja lahtri ja mitte kunagi
+          // lunastatud tookojal -- omaniku sisestatu on alati ulimuslik.
+          if (!w.claimed) {
+            if (empty(w.phone) && !empty(d.nationalPhoneNumber)) { patch.phone = d.nationalPhoneNumber; phones++; }
+            if (empty(w.website) && !empty(d.websiteUri)) { patch.website = d.websiteUri; sites++; }
+            if (empty(w.opening_hours)) {
+              const oh = hoursFromGoogle(d.regularOpeningHours);
+              if (oh) { patch.opening_hours = oh; hours++; }
+            }
+          }
+
+          await sb.from('workshops').update(patch).eq('id', w.id);
           done++;
         } catch { fail++; }
       }));
@@ -143,7 +209,8 @@ export async function GET(req: Request) {
     .or(staleFilter);
 
   return NextResponse.json({
-    ok: true, batches, processed, done, fail, photos,
+    ok: true, batches, processed, done, fail,
+    photos, phones, sites, hours,
     remaining: remaining ?? null,
     timedOut, ms: Date.now() - started,
   });
