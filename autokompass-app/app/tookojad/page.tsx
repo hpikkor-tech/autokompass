@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { createPublicClient } from '@/lib/supabase/server';
+import { createFreshClient } from '@/lib/supabase/server';
 import { Icon, Stars } from '@/components/icons';
 import { OpenStatus } from '@/components/OpenStatus';
 import { ListingMap } from '@/components/ListingMap';
@@ -8,7 +8,7 @@ import { SVC_CATS, displayServices, matchesSvcW, svcLabel } from '@/lib/serviceT
 import { compactHours } from '@/lib/hours';
 import type { Workshop } from '@/lib/types'; import { GThumb } from '@/components/GPlace'; import { SortSelect } from '@/components/SortSelect'; import { RememberListing } from '@/components/ListingMemory'; import { DISTRICT_LIST, getCity } from '@/lib/landing';
 
-export const revalidate = 0; export const fetchCache = 'force-no-store';
+export const revalidate = 0; // Supabase kaib createFreshClient'iga cache'ist mooda; Google Places pildid hoiavad oma 24h vahemalu
 
 const TIER_RANK: Record<string, number> = { spotlight: 3, featured: 2, pro: 1, none: 0 };
 const PER_PAGE = 24;
@@ -81,7 +81,7 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
 
   let all: Workshop[] = [];
   try {
-    const supabase = createPublicClient();
+    const supabase = createFreshClient();
     const { data } = await supabase.from('workshops').select('*').eq('is_hidden', false).limit(5000);
     all = (data as Workshop[] | null) ?? [];
   } catch { /* DB pole seadistatud */ }
