@@ -33,3 +33,8 @@
 .fmore>summary::after{content:' \25be'}
 .fmore[open]>summary::after{content:' \25b4'}
 .fmore>summary:hover{background:var(--line-2)}
+
+/* Tookoja profiili korvalriba: kaks kaarti uhe kleepuva pinu sees */
+.asidestack{display:flex;flex-direction:column;gap:16px}
+.asidestack .qbox{position:static}
+@media(min-width:901px){.asidestack{position:sticky;top:90px}}
