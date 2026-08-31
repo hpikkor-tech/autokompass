@@ -21,6 +21,10 @@ export interface Workshop {
   about: string | null;
   logo_url: string | null;
   photos: string[];
+  photo_url?: string | null;
+  photo_attr?: string | null;
+  photo_name?: string | null;
+  photo_at?: string | null;
   claimed: boolean;
   featured_tier: FeaturedTier;
   featured_until: string | null;
