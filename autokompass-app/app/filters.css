@@ -38,3 +38,6 @@
 .asidestack{display:flex;flex-direction:column;gap:16px}
 .asidestack .qbox{position:static}
 @media(min-width:901px){.asidestack{position:sticky;top:90px}}
+
+/* Filtrigrupi selgitus: kumb valik pariselt kitsendab */
+.ghint{color:var(--muted-2);font-size:12px;line-height:1.4;margin:-4px 0 8px}
