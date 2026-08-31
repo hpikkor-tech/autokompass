@@ -94,8 +94,9 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
   // AND-loogika: valimata teenuse juures näitame, mitu jääks alles, kui selle juurde lisada
   const selBase = forSvc.filter((w) => svcSel.every((s) => matchesSvcW(w, s)));
   const svcCounts = SVC_CATS.map((c) => ({ ...c, n: svcSel.includes(c.slug) ? selBase.length : selBase.filter((w) => matchesSvcW(w, c.slug)).length }));
-  const cityCounts = Object.entries(forCity.reduce<Record<string, number>>((m, w) => { if (w.city) m[w.city] = (m[w.city] || 0) + 1; return m; }, {}))
-    .sort((a, b) => b[1] - a[1]).slice(0, 14);
+  const cityAll = Object.entries(forCity.reduce<Record<string, number>>((m, w) => { if (w.city) m[w.city] = (m[w.city] || 0) + 1; return m; }, {}))
+    .sort((a, b) => b[1] - a[1]);
+  const cityCounts = cityAll.slice(0, 14);
   const dstCounts = DISTRICT_LIST.map((d) => ({ slug: d.slug, name: d.name, n: forDst.filter((w) => w.district === d.slug).length })).filter((d) => d.n > 0 || d.slug === dst);
   const showDst = city === 'Tallinn' || !!dst;
   const verCount = applyFilters(all, { svc, city, dst, web }).filter((w) => w.claimed).length;
@@ -118,6 +119,20 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
   const dstName = dst ? (getCity(dst)?.name ?? '') : '';
   const heading = `${svcLabels(svc) || 'Autotöökojad'}${dstName ? ' ' + dstName : city ? ' ' + city : ''}`;
   const activeFilters = svcSel.length + [city, dst, ver, web].filter(Boolean).length;
+  // Linnade nimekiri: valitud linn kõige ette, siis 6 suurimat, ulejaanud kokkuklapitult.
+  // Linnaosad renderdatakse VAHETULT valitud linna alla -- muidu jaid nad 14 linna taha peitu.
+  const CITY_VISIBLE = 6;
+  const selCity: [string, number] | undefined =
+    city ? (cityAll.find(([c]) => c === city) ?? [city, forCity.filter((w) => w.city === city).length]) : undefined;
+  const restCities = cityAll.filter(([c]) => c !== city);
+  const headCities = restCities.slice(0, CITY_VISIBLE);
+  const tailCities = restCities.slice(CITY_VISIBLE, 40);
+  const cityOpt = ([c, n]: [string, number]) => (
+    <Link key={c} href={qs(searchParams, { city: city === c ? '' : c, dst: city === c ? '' : dst })} className={'fopt' + (city === c ? ' on' : '')}>
+      <span className="fx">{city === c ? <Icon.check /> : <i className="fbox" />}{c}</span><b>{n}</b>
+    </Link>
+  );
+
   const sortBase = (svc ? 'svc=' + encodeURIComponent(svc) + '&' : '') + (city ? 'city=' + encodeURIComponent(city) + '&' : '') + (dst ? 'dst=' + encodeURIComponent(dst) + '&' : '') + (ver ? 'ver=1&' : '') + (web ? 'web=1&' : '');
 
   return (
@@ -157,22 +172,27 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
             </div>
 
             <div className="fgroup"><div className="gt">Linn</div>
-              {cityCounts.map(([c, n]) => (
-                <Link key={c} href={qs(searchParams, { city: city === c ? '' : c, dst: city === c ? '' : dst })} className={'fopt' + (city === c ? ' on' : '')}>
-                  <span className="fx">{city === c ? <Icon.check /> : <i className="fbox" />}{c}</span><b>{n}</b>
-                </Link>
-              ))}
-            </div>
+              {selCity && cityOpt(selCity)}
 
-            {showDst && dstCounts.length > 0 && (
-              <div className="fgroup"><div className="gt">Tallinna linnaosa</div>
-                {dstCounts.map((d) => (
-                  <Link key={d.slug} href={qs(searchParams, { dst: dst === d.slug ? '' : d.slug, city: 'Tallinn' })} className={'fopt' + (dst === d.slug ? ' on' : '')}>
-                    <span className="fx">{dst === d.slug ? <Icon.check /> : <i className="fbox" />}{d.name}</span><b>{d.n}</b>
-                  </Link>
-                ))}
-              </div>
-            )}
+              {showDst && dstCounts.length > 0 && (
+                <div className="dsub">
+                  <div className="dsubt">Linnaosa</div>
+                  {dstCounts.map((d) => (
+                    <Link key={d.slug} href={qs(searchParams, { dst: dst === d.slug ? '' : d.slug, city: 'Tallinn' })} className={'fopt' + (dst === d.slug ? ' on' : '')}>
+                      <span className="fx">{dst === d.slug ? <Icon.check /> : <i className="fbox" />}{d.name}</span><b>{d.n}</b>
+                    </Link>
+                  ))}
+                </div>
+              )}
+
+              {headCities.map(cityOpt)}
+              {tailCities.length > 0 && (
+                <details className="fmore">
+                  <summary>Veel {tailCities.length} linna</summary>
+                  {tailCities.map(cityOpt)}
+                </details>
+              )}
+            </div>
 
             <div className="fgroup"><div className="gt">Muu</div>
               <Link href={qs(searchParams, { ver: ver ? '' : '1' })} className={'fopt' + (ver ? ' on' : '')}><span className="fx">{ver ? <Icon.check /> : <i className="fbox" />}Kontrollitud töökoda</span><b>{verCount}</b></Link>
