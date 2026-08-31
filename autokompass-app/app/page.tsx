@@ -13,25 +13,31 @@ export const revalidate = 300; // ISR
 const TIER_RANK: Record<string, number> = { spotlight: 3, featured: 2, pro: 1, none: 0 };
 
 // Linnad tegeliku otsingumahu järjekorras (DataForSEO 08.2026): Tallinn, Tartu esimesena.
-const CITIES = ['Tallinn', 'Tartu', 'Pärnu', 'Narva', 'Rakvere', 'Viljandi', 'Kohtla-Järve', 'Kuressaare', 'Haapsalu', 'Võru', 'Valga', 'Jõhvi', 'Paide', 'Rapla'];
+const CITIES: [string, string][] = [
+  ['Tallinn', 'tallinn'], ['Tartu', 'tartu'], ['Pärnu', 'parnu'], ['Narva', 'narva'],
+  ['Viljandi', 'viljandi'], ['Võru', 'voru'], ['Jõhvi', 'johvi'], ['Rakvere', 'rakvere'],
+  ['Viimsi', 'viimsi'], ['Keila', 'keila'], ['Kuressaare', 'kuressaare'], ['Rapla', 'rapla'],
+  ['Kohtla-Järve', 'kohtla-jarve'], ['Maardu', 'maardu'], ['Haapsalu', 'haapsalu'],
+  ['Saue', 'saue'], ['Paide', 'paide'], ['Valga', 'valga'],
+];
 
 // Teenused nõudluse järjekorras: rehvivahetus + autoremont on suurima mahuga.
 const SERVICES: [string, string][] = [
-  ['rehvivahetus', 'Rehvivahetus'], ['olivahetus', 'Õlivahetus'], ['piduriklotsid', 'Piduriklotside vahetus'],
-  ['diagnostika', 'Rikkediagnostika'], ['kliima', 'Kliimaseadme hooldus'], ['vedrustus', 'Rooliotsad ja vedrustus'],
-  ['ulevaatus', 'Ülevaatuse eelkontroll'], ['mootoriremont', 'Mootoriremont'],
+  ['rehvivahetus', 'Rehvivahetus'], ['olivahetus', 'Õlivahetus'], ['piduriklotsid', 'Piduritööd'],
+  ['diagnostika', 'Diagnostika ja elekter'], ['keretood', 'Keretööd ja värvimine'], ['autoklaas', 'Autoklaas'],
+  ['kliima', 'Kliimahooldus'], ['autopesu', 'Autopesu'],
 ];
 
 // Populaarsed teenuseplaadid (ikoon + lühikirjeldus) — juhivad kõige otsitumatele.
 const TILES: { slug: string; label: string; desc: string; icon: keyof typeof Icon }[] = [
   { slug: 'rehvivahetus', label: 'Rehvivahetus', desc: 'Suve- ja talverehvid, hoiustamine', icon: 'clock' },
   { slug: 'olivahetus', label: 'Õlivahetus', desc: 'Õli ja filter, kiire hooldus', icon: 'bolt' },
-  { slug: 'piduriklotsid', label: 'Piduriklotsid', desc: 'Klotsid ja kettad, ohutus', icon: 'shield' },
+  { slug: 'piduriklotsid', label: 'Piduritööd', desc: 'Klotsid ja kettad, ohutus', icon: 'shield' },
   { slug: 'diagnostika', label: 'Rikkediagnostika', desc: 'Rikketuli ja veakoodid', icon: 'search' },
+  { slug: 'keretood', label: 'Keretööd ja värvimine', desc: 'Mõlkide ja kriimude parandus', icon: 'wrench' },
+  { slug: 'autoklaas', label: 'Autoklaasi vahetus', desc: 'Tuuleklaas ja kivikillu parandus', icon: 'shield' },
   { slug: 'kliima', label: 'Kliimahooldus', desc: 'Täitmine ja lekkeotsing', icon: 'star' },
-  { slug: 'vedrustus', label: 'Vedrustus', desc: 'Rooliotsad, amordid', icon: 'wrench' },
-  { slug: 'ulevaatus', label: 'Ülevaatuse eelkontroll', desc: 'Väldi korduskontrolli', icon: 'check' },
-  { slug: 'mootoriremont', label: 'Mootoriremont', desc: 'Suuremad tööd, hinnavõrdlus', icon: 'phone' },
+  { slug: 'autopesu', label: 'Autopesu', desc: 'Pesu ja salongihooldus', icon: 'check' },
 ];
 
 export default async function Home() {
@@ -62,7 +68,7 @@ export default async function Home() {
             <p className="sub">Võrdle hindu, arvustusi ja vaba aega 1500+ töökoja seast üle Eesti. Kirjelda oma muret — leiame sulle parima pakkumise, ilma järjekorras ootamata.</p>
             <form className="searchcard" action="/tookojad">
               <select name="svc" defaultValue=""><option value="">Milline teenus?</option>{SERVICES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>
-              <select name="city" defaultValue=""><option value="">Kus linnas?</option>{CITIES.map((c) => <option key={c} value={c}>{c}</option>)}</select>
+              <select name="city" defaultValue=""><option value="">Kus linnas?</option>{CITIES.map(([nimi]) => <option key={nimi} value={nimi}>{nimi}</option>)}</select>
               <button className="btn btn-p" type="submit"><Icon.search /> Leia töökojad</button>
             </form>
             <div className="herotrust">
@@ -158,7 +164,7 @@ export default async function Home() {
         <div className="wrap">
           <div className="sec-h"><span className="eyebrow">Sirvi asukoha järgi</span><h2>Autotöökojad linnades</h2></div>
           <div className="probs">
-            {CITIES.map((c) => <Link key={c} href={`/tookojad?city=${c}`} className="chip"><Icon.pin /> {c}</Link>)}
+            {CITIES.map(([nimi, slug]) => <Link key={slug} href={`/autoremont/${slug}`} className="chip"><Icon.pin /> {nimi}</Link>)}
           </div>
         </div>
       </section>
