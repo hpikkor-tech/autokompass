@@ -119,9 +119,15 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
   const dstName = dst ? (getCity(dst)?.name ?? '') : '';
   const heading = `${svcLabels(svc) || 'Autotöökojad'}${dstName ? ' ' + dstName : city ? ' ' + city : ''}`;
   const activeFilters = svcSel.length + [city, dst, ver, web].filter(Boolean).length;
-  // Teenused, mille loendur on 0, lahevad kokkuklapitava alla -- muidu lukkavad nad linnaosad ekraanist valja.
-  const liveSvc = svcCounts.filter((c) => c.n > 0 || svcSel.includes(c.slug));
-  const deadSvc = svcCounts.filter((c) => c.n === 0 && !svcSel.includes(c.slug));
+  // Teenused jagunevad kaheks. 'yld' = seda pakub peaaegu iga tookoda (nt olivahetus
+  // 1652/1751) -- selline filter ei kitsenda midagi ja varem eksitas kasutajat, sest
+  // ta nagi nelja eraldi valikut, mis andsid sama tulemuse. 'eriala' = tookoja
+  // tegelik spetsialiseerumine. Nuud on need eraldi pealkirja all ja kasutaja naeb kohe,
+  // milline valik teda pariselt aitab.
+  const alive = (c: { slug: string; n: number }) => c.n > 0 || svcSel.includes(c.slug);
+  const yldSvc = svcCounts.filter((c) => c.group === 'yld' && alive(c));
+  const eriSvc = svcCounts.filter((c) => c.group === 'eriala' && alive(c));
+  const deadSvc = svcCounts.filter((c) => !alive(c));
   const svcOpt = (c: { slug: string; label: string; n: number }) => (
     <Link key={c.slug} href={qs(searchParams, { svc: toggleSvc(svc, c.slug) })} className={'fopt' + (svcSel.includes(c.slug) ? ' on' : '') + (c.n === 0 && !svcSel.includes(c.slug) ? ' off' : '')}>
       <span className="fx">{svcSel.includes(c.slug) ? <Icon.check /> : <i className="fbox" />}{c.label}</span><b>{c.n}</b>
@@ -172,8 +178,14 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
             <div className="filt-top"><h4>Filtrid</h4><div className="filt-top-r">{activeFilters > 0 && <Link href="/tookojad" className="clearf">Tühjenda</Link>}<label htmlFor="fto" className="fclose" aria-label="Sulge filtrid" role="button">✕</label></div></div>
             <p className="fhint">Vali mitu teenust korraga — näitame ainult töökodi, kus on <b>kõik</b> valitud teenused.</p>
 
-            <div className="fgroup"><div className="gt">Teenus</div>
-              {liveSvc.map(svcOpt)}
+            <div className="fgroup"><div className="gt">Üldteenused</div>
+              <p className="ghint">Neid töid teeb enamik töökodi — valik jääb laiaks.</p>
+              {yldSvc.map(svcOpt)}
+            </div>
+
+            <div className="fgroup"><div className="gt">Eriala</div>
+              <p className="ghint">Siit valides jääb alles ainult see, kes seda tööd päriselt teeb.</p>
+              {eriSvc.map(svcOpt)}
               {deadSvc.length > 0 && (
                 <details className="fmore">
                   <summary>Veel {deadSvc.length} teenust (0 vastet)</summary>
