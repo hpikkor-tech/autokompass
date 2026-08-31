@@ -21,9 +21,9 @@ export function QuoteForm({ workshopId, phone, address }:
   return (
     <div className="qbox">
       <h3>Küsi pakkumist</h3>
-      <p style={{ color: 'var(--muted)', fontSize: 14.5, margin: '6px 0 4px' }}>Kirjelda oma muret — töökoda vastab tavaliselt tunni jooksul. Tasuta ja mittesiduv.</p>
+      <p style={{ color: 'var(--muted)', fontSize: 14.5, margin: '6px 0 4px' }}>Kirjelda oma muret ja jäta telefon — aitame sul selle töökojaga ühendust saada. Tasuta ja mittesiduv.</p>
       {state === 'done' ? (
-        <p className="msg-ok">Päring saadetud. Töökoda võtab sinuga ühendust.</p>
+        <p className="msg-ok">Päring on kirjas. Võtame sinuga peagi ühendust.</p>
       ) : (
         <form onSubmit={submit}>
           <label>Mis su autol viga on?</label>
