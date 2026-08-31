@@ -45,6 +45,8 @@ export default async function Profile({ params }: { params: { slug: string } }) 
   } catch { /* ignore */ }
   const hasPhotos = !!(w.photos && w.photos.length);
 
+  const tel: string | null = w.phone || gp?.nationalPhoneNumber || null;
+
   return (
     <main>
       <div className="wrap pv">
@@ -120,7 +122,22 @@ export default async function Profile({ params }: { params: { slug: string } }) 
           </div>
 
           <aside>
-            <div className="qbox"><h3 style={{fontFamily:'Lexend',fontSize:19,marginBottom:8}}>Broneeri aeg</h3><p style={{color:'var(--muted)',fontSize:14.5,marginBottom:14}}>Broneerimine ja hinnainfo käivad otse töökojas.</p>{w.website && <a className="btn btn-p" style={{width:'100%',marginBottom:10}} href={w.website} target="_blank" rel="noreferrer">Broneeri töökoja kodulehel</a>}{(w.phone || gp?.nationalPhoneNumber) && <a className="btn btn-o" style={{width:'100%'}} href={'tel:' + (w.phone || gp.nationalPhoneNumber).replace(/\s/g, '')}><Icon.phone /> {w.phone || gp.nationalPhoneNumber}</a>}<a className="btn btn-o" style={{width:'100%',marginTop:10}} href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(w.name + ' ' + (w.address || w.city || 'Eesti'))} target="_blank" rel="noreferrer">Vaata Google'i kaardil</a></div>
+            <div className="asidestack">
+              <div className="qbox">
+                <h3 style={{fontFamily:'Lexend',fontSize:19,marginBottom:8}}>Võta ühendust</h3>
+                {tel ? (
+                  <>
+                    <p style={{color:'var(--muted)',fontSize:14.5,marginBottom:14}}>Kiireim viis on helistada.</p>
+                    <a className="btn btn-p" style={{width:'100%',marginBottom:10}} href={'tel:' + tel.replace(/\s/g, '')}><Icon.phone /> {tel}</a>
+                  </>
+                ) : (
+                  <p style={{color:'var(--muted)',fontSize:14.5,marginBottom:14}}>Sellel töökojal pole meil veel telefoninumbrit. Saada päring allpool — aitame ühenduse luua.</p>
+                )}
+                {w.website && <a className="btn btn-o" style={{width:'100%',marginBottom:10}} href={w.website} target="_blank" rel="noreferrer">Broneeri töökoja kodulehel</a>}
+                <a className="btn btn-o" style={{width:'100%'}} href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(w.name + ' ' + (w.address || w.city || 'Eesti'))} target="_blank" rel="noreferrer">Vaata Google&apos;i kaardil</a>
+              </div>
+              <QuoteForm workshopId={w.id} phone={tel} address={w.address || w.city || null} />
+            </div>
           </aside>
         </div>
       </div>
