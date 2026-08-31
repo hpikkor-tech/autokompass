@@ -30,6 +30,20 @@ export function createPublicClient() {
   );
 }
 
+// Nagu createPublicClient, aga iga paring laheb otse DB-sse (Verceli Data Cache moodub).
+// Kasuta listingus, kus filtriloendurid peavad olema alati varsked. Ei mojuta muid fetch'e
+// samal lehel (nt Google Places), erinevalt route-tasandi fetchCache = 'force-no-store'-ist.
+export function createFreshClient() {
+  return createJsClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      auth: { persistSession: false },
+      global: { fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, { ...init, cache: 'no-store' }) },
+    }
+  );
+}
+
 // Service-role klient (möödub RLS-ist). AINULT serveris / skriptides — mitte kunagi brauserisse.
 export function createAdminClient() {
   return createJsClient(
