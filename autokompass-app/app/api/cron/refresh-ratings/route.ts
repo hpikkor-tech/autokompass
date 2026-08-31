@@ -5,11 +5,17 @@ export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
 export const maxDuration = 60;
 
-// Google'i poliitika: reitingu tohib DB-s hoida kuni 30 paeva.
+// Google'i poliitika: Places'i sisu tohib DB-s hoida kuni 30 paeva.
 // Varskendame kui snapshot on vanem kui 25 paeva -> 5 paeva varu.
+//
+// Sama paring toob nuud KA foto. Pohjus: 'rating,userRatingCount' on juba
+// Enterprise-tasandi FieldMask ja 'photos' on Essentials -- arve kaib korgeima
+// tasandi jargi, seega foto lisamine samasse paringusse on TASUTA.
+// Varem kusisime fotot iga lehe renderdusega (listingus 24 kaarti x 2 kutset),
+// mis andis ~33 000 API-kutset paevas. Nuud ~1 kutse tookoja kohta 25 paeva jooksul.
 const STALE_DAYS = 25;
 const BATCH = 50;          // rida korraga Supabase'ist
-const CONCURRENCY = 8;     // paralleelseid Google'i paringuid
+const CONCURRENCY = 6;     // paralleelseid Google'i paringuid (nuud 2 kutset rea kohta)
 const BUDGET_MS = 45000;   // jata maxDuration = 60 sisse varu
 
 export async function GET(req: Request) {
@@ -38,9 +44,14 @@ export async function GET(req: Request) {
   }
 
   const cutoff = new Date(Date.now() - STALE_DAYS * 86400000).toISOString();
-  const staleFilter = `google_rating_at.is.null,google_rating_at.lt.${cutoff}`;
+  // Rida vajab varskendust, kui reiting VOI foto on vana/puudu.
+  // photo_at seatakse igal katsel (ka siis kui fotot pole), et fotota kohad
+  // ei satuks igasse joosku tagasi.
+  const staleFilter =
+    `google_rating_at.is.null,google_rating_at.lt.${cutoff},` +
+    `photo_at.is.null,photo_at.lt.${cutoff}`;
 
-  let processed = 0, done = 0, fail = 0, batches = 0;
+  let processed = 0, done = 0, fail = 0, batches = 0, photos = 0;
   let lastId: string | number | null = null;
   let timedOut = false;
 
@@ -79,17 +90,43 @@ export async function GET(req: Request) {
             {
               headers: {
                 'X-Goog-Api-Key': KEY,
-                'X-Goog-FieldMask': 'rating,userRatingCount',
+                'X-Goog-FieldMask': 'rating,userRatingCount,photos',
               },
               cache: 'no-store',
             }
           );
           if (!r.ok) { fail++; return; }
           const d = await r.json();
+
+          // Foto: lahenda meedia-URI ainult siis, kui kohal foto uldse on.
+          const ph = Array.isArray(d.photos) ? d.photos[0] : null;
+          let photoUrl: string | null = null;
+          let photoAttr: string | null = null;
+          if (ph?.name) {
+            try {
+              const pr = await fetch(
+                `https://places.googleapis.com/v1/${ph.name}/media?maxWidthPx=800&skipHttpRedirect=true`,
+                { headers: { 'X-Goog-Api-Key': KEY }, cache: 'no-store' }
+              );
+              if (pr.ok) {
+                const pd = await pr.json();
+                photoUrl = pd.photoUri ?? null;
+                const a = ph.authorAttributions && ph.authorAttributions[0];
+                photoAttr = a?.displayName ?? null;
+                if (photoUrl) photos++;
+              }
+            } catch { /* foto ebaonnestus -- reiting laheb ikka kirja */ }
+          }
+
+          const now = new Date().toISOString();
           await sb.from('workshops').update({
             google_rating: d.rating ?? null,
             google_rating_count: d.userRatingCount ?? 0,
-            google_rating_at: new Date().toISOString(),
+            google_rating_at: now,
+            photo_url: photoUrl,
+            photo_attr: photoAttr,
+            photo_name: ph?.name ?? null,
+            photo_at: now,
           }).eq('id', w.id);
           done++;
         } catch { fail++; }
@@ -106,7 +143,7 @@ export async function GET(req: Request) {
     .or(staleFilter);
 
   return NextResponse.json({
-    ok: true, batches, processed, done, fail,
+    ok: true, batches, processed, done, fail, photos,
     remaining: remaining ?? null,
     timedOut, ms: Date.now() - started,
   });
