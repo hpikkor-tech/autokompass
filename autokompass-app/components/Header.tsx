@@ -10,14 +10,18 @@ export function Header() {
 
   // Sulge menüü lehe vahetusel.
   useEffect(() => { setOpen(false); }, [pathname]);
-  // Lukusta taustakerimine, kui menüü on lahti.
-  useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [open]);
+
+  // NB! Siin oli varem `document.body.style.overflow = 'hidden'`.
+  // iOS Safaris katkestab see keritud lehel sticky-päise positsioneerimise:
+  // päis hüppab tagasi dokumendi algusesse ja koos sellega ka avatud menüü --
+  // kasutaja pidi menüü nägemiseks üles kerima. Kerimislukk on nüüd CSS-is:
+  // .navscrim { touch-action: none } ei lase tumendatud taustal lehte kerida.
+  // Teine pool parandust on globals/filters.css-is: mobiilis eemaldame päiselt
+  // `backdrop-filter`-i, sest see teeb päisest `position: fixed` järglaste
+  // sisaldava ploki ja menüü ei ole siis ekraani, vaid päise suhtes fikseeritud.
 
   return (
-    <header className="site">
+    <header className={'site' + (open ? ' menu-open' : '')}>
       <div className="nav">
         <Link href="/" className="brand" aria-label="Autokompass avaleht">
           <Mark />
