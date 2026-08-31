@@ -119,6 +119,15 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
   const dstName = dst ? (getCity(dst)?.name ?? '') : '';
   const heading = `${svcLabels(svc) || 'Autotöökojad'}${dstName ? ' ' + dstName : city ? ' ' + city : ''}`;
   const activeFilters = svcSel.length + [city, dst, ver, web].filter(Boolean).length;
+  // Teenused, mille loendur on 0, lahevad kokkuklapitava alla -- muidu lukkavad nad linnaosad ekraanist valja.
+  const liveSvc = svcCounts.filter((c) => c.n > 0 || svcSel.includes(c.slug));
+  const deadSvc = svcCounts.filter((c) => c.n === 0 && !svcSel.includes(c.slug));
+  const svcOpt = (c: { slug: string; label: string; n: number }) => (
+    <Link key={c.slug} href={qs(searchParams, { svc: toggleSvc(svc, c.slug) })} className={'fopt' + (svcSel.includes(c.slug) ? ' on' : '') + (c.n === 0 && !svcSel.includes(c.slug) ? ' off' : '')}>
+      <span className="fx">{svcSel.includes(c.slug) ? <Icon.check /> : <i className="fbox" />}{c.label}</span><b>{c.n}</b>
+    </Link>
+  );
+
   // Linnade nimekiri: valitud linn kõige ette, siis 6 suurimat, ulejaanud kokkuklapitult.
   // Linnaosad renderdatakse VAHETULT valitud linna alla -- muidu jaid nad 14 linna taha peitu.
   const CITY_VISIBLE = 6;
@@ -164,11 +173,13 @@ export default async function Listing({ searchParams }: { searchParams: SP }) {
             <p className="fhint">Vali mitu teenust korraga — näitame ainult töökodi, kus on <b>kõik</b> valitud teenused.</p>
 
             <div className="fgroup"><div className="gt">Teenus</div>
-              {svcCounts.map((c) => (
-                <Link key={c.slug} href={qs(searchParams, { svc: toggleSvc(svc, c.slug) })} className={'fopt' + (svcSel.includes(c.slug) ? ' on' : '') + (c.n === 0 && !svcSel.includes(c.slug) ? ' off' : '')}>
-                  <span className="fx">{svcSel.includes(c.slug) ? <Icon.check /> : <i className="fbox" />}{c.label}</span><b>{c.n}</b>
-                </Link>
-              ))}
+              {liveSvc.map(svcOpt)}
+              {deadSvc.length > 0 && (
+                <details className="fmore">
+                  <summary>Veel {deadSvc.length} teenust (0 vastet)</summary>
+                  {deadSvc.map(svcOpt)}
+                </details>
+              )}
             </div>
 
             <div className="fgroup"><div className="gt">Linn</div>
