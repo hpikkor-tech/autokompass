@@ -41,3 +41,20 @@
 
 /* Filtrigrupi selgitus: kumb valik pariselt kitsendab */
 .ghint{color:var(--muted-2);font-size:12px;line-height:1.4;margin:-4px 0 8px}
+
+/* MOBIILIMENUU PARANDUS (31.08)
+   Viga: keritud lehel menuu avades kadus menuu ekraani ulaosast valja ja
+   kasutaja pidi selle nagemiseks tagasi ules kerima.
+   Kaks pohjust, molemad parandatud:
+   1) header.site kannab `backdrop-filter`-it. CSS-i jargi teeb see pdisest
+      `position: fixed` jarglaste SISALDAVA PLOKI -- .navsheet ei olnud enam
+      ekraani, vaid paise suhtes fikseeritud. Mobiilis eemaldame filtri.
+   2) Header.tsx pani menuu avades body{overflow:hidden}; iOS Safaris katkestab
+      see sticky-paise positsioneerimise ja pais huppab dokumendi algusesse.
+      Lukk on nuud CSS-is: tumendatud taust ei vota puuteid vastu. */
+@media(max-width:900px){
+  header.site{backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff}
+  header.site.menu-open{background:#fff}
+}
+.navscrim{touch-action:none;overscroll-behavior:contain}
+.navsheet{overscroll-behavior:contain;max-height:calc(100dvh - 68px);overflow-y:auto;-webkit-overflow-scrolling:touch}
