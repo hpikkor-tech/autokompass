@@ -4,17 +4,13 @@ import { OpenStatus } from './OpenStatus';
 import { displayServices } from '@/lib/serviceTags';
 import { compactHours } from '@/lib/hours';
 import type { Workshop } from '@/lib/types';
+import { GThumb } from './GPlace';
 
 function thumbColor(name: string) {
   const cols = ['#0B5394', '#0A8F63', '#B4700F', '#5B3FA8', '#B03A5B', '#2B6CB0', '#1F7A5A'];
   let h = 0; for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
   return cols[h % cols.length];
 }
-function initials(name: string) {
-  const parts = name.replace(/[^A-Za-zÄÖÜÕäöüõ0-9 ]/g, '').trim().split(/\s+/).filter(Boolean);
-  return ((parts[0]?.[0] || 'A') + (parts[1]?.[0] || '')).toUpperCase();
-}
-
 export function WorkshopRow({ w }: { w: Workshop }) {
   const feat = w.featured_tier !== 'none';
   const services = displayServices(w);
@@ -23,8 +19,7 @@ export function WorkshopRow({ w }: { w: Workshop }) {
     <div className={'rowcard' + (feat ? ' feat' : '')}>
       {feat && <div className="feat-tag">Esiletõstetud</div>}
       <Link href={`/tookoda/${w.slug}`} className="rthumb" style={{ background: `linear-gradient(135deg, ${thumbColor(w.name)}, ${thumbColor(w.name)}cc)` }} aria-label={w.name}>
-        <span className="ri">{initials(w.name)}</span>
-        <Icon.wrench />
+        <GThumb w={w} />
       </Link>
       <div className="rmid">
         <Link href={`/tookoda/${w.slug}`} className="rnm">{w.name}
@@ -43,7 +38,7 @@ export function WorkshopRow({ w }: { w: Workshop }) {
           {w.rating_count > 0 ? (
             <><div className="num">{w.rating_avg.toFixed(1).replace('.', ',')}</div><Stars /><div className="rc">{w.rating_count} arvustust</div></>
           ) : (
-            <span className="newpill">Uus töökoda</span>
+            w.google_rating && w.google_rating_count ? <><div className="num">{Number(w.google_rating).toFixed(1).replace('.', ',')}</div><Stars /><div className="rc">{w.google_rating_count} arvustust Google&apos;is</div></> : <span className="newpill">Arvustusi veel pole</span>
           )}
         </div>
         <div className="ract">
