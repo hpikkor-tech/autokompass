@@ -27,7 +27,7 @@ export default function Tingimused() {
             <p className="legal-upd">Viimati uuendatud: {UPDATED}</p>
 
             <h2>1. Teenuse kirjeldus</h2>
-            <p>Autokompass.ee on Eesti autotöökodade võrdlus- ja kataloogiportaal, mida haldab <b>HPH INVEST OÜ</b> (registrikood 16146970). Portaal aitab autojuhil leida ja võrrelda töökodi ning saata neile hinnapäringuid. Autokompass ei ole remonditeenuse osutaja ega vahenda lepingut — leping sõlmitakse alati otse kasutaja ja töökoja vahel.</p>
+            <p>Autokompass.ee on Eesti autotöökodade võrdlus- ja kataloogiportaal. Portaal aitab autojuhil leida ja võrrelda töökodi ning saata neile hinnapäringuid. Autokompass ei ole remonditeenuse osutaja ega vahenda lepingut — leping sõlmitakse alati otse kasutaja ja töökoja vahel.</p>
 
             <h2>2. Kliendile tasuta</h2>
             <p>Töökodade otsimine, võrdlemine ja hinnapäringu saatmine on autojuhile <b>alati tasuta</b>. Me ei võta kliendilt vahendustasu.</p>
@@ -45,7 +45,7 @@ export default function Tingimused() {
             <p>Teeme mõistlikke jõupingutusi, et portaali info oleks täpne, kuid ei garanteeri avalikest allikatest pärineva info täielikkust ega ajakohasust. Autokompass ei vastuta töökoja osutatud teenuse kvaliteedi ega kasutaja ja töökoja vahelise lepingu eest.</p>
 
             <h2>7. Intellektuaalomand</h2>
-            <p>Portaali kujundus, tekstid ja kaubamärgid kuuluvad HPH INVEST OÜ-le. Avaandmete puhul järgime allikate litsentsitingimusi (nt OpenStreetMap © kaastöölised).</p>
+            <p>Portaali kujundus, tekstid ja kaubamärgid kuuluvad Autokompassile. Avaandmete puhul järgime allikate litsentsitingimusi (nt OpenStreetMap © kaastöölised).</p>
 
             <h2>8. Kohaldatav õigus</h2>
             <p>Tingimustele kohaldatakse Eesti Vabariigi õigust. Vaidlused lahendatakse läbirääkimiste teel, kokkuleppe puudumisel Pärnu Maakohtus.</p>
