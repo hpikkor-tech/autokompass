@@ -5,7 +5,7 @@ import { Icon } from '@/components/icons';
 export const metadata: Metadata = {
   title: 'Privaatsuspoliitika | Autokompass',
   description:
-    'Kuidas Autokompass (HPH INVEST OÜ) kogub, kasutab ja kaitseb isikuandmeid. Andmete päritolu, sinu õigused ja kuidas eemaldada oma töökoja profiil.',
+    'Kuidas Autokompass kogub, kasutab ja kaitseb isikuandmeid. Andmete päritolu, sinu õigused ja kuidas eemaldada oma töökoja profiil.',
 };
 
 const UPDATED = '14. august 2026';
@@ -27,7 +27,7 @@ export default function Privaatsus() {
             <p className="legal-upd">Viimati uuendatud: {UPDATED}</p>
 
             <h2>1. Vastutav töötleja</h2>
-            <p>Autokompass.ee portaali haldab <b>HPH INVEST OÜ</b> (registrikood 16146970), aadress Lai tn 15a, Pärnu 80010, Eesti. Andmekaitse küsimustes saad meiega ühendust võtta e-posti teel <a href="mailto:info@autokompass.ee">info@autokompass.ee</a>.</p>
+            <p>Autokompass.ee portaali vastutav töötleja on portaali haldaja. Andmekaitse küsimustes saad meiega ühendust võtta e-posti teel <a href="mailto:info@autokompass.ee">info@autokompass.ee</a>.</p>
 
             <h2>2. Milliseid andmeid me kogume</h2>
             <p>Kogume ja töötleme järgmisi andmeid:</p>
