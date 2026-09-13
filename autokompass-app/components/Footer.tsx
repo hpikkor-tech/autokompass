@@ -45,17 +45,11 @@ export function Footer() {
         <div>
           <h4>Kontakt</h4>
           <a href="mailto:info@autokompass.ee"><Icon.send /> info@autokompass.ee</a>
-          <div className="ftcompany">
-            <span>Portaali haldab</span>
-            <b>HPH INVEST OÜ</b>
-            <span>Reg nr 16146970</span>
-            <span>Lai tn 15a, Pärnu 80010</span>
-          </div>
         </div>
       </div>
 
       <div className="ftbot">
-        <span>© 2026 HPH INVEST OÜ · Autokompass.ee · Eesti kõige põhjalikum autotöökodade kataloog</span>
+        <span>© 2026 Autokompass.ee · Eesti kõige põhjalikum autotöökodade kataloog</span>
         <span className="ftlinks">
           <Link href="/privaatsus">Privaatsus</Link>
           <Link href="/tingimused">Tingimused</Link>
